@@ -1,0 +1,30 @@
+# Lunt - Development Dependencies
+# Instalar con: pip install -r requirements-dev.txt
+
+# Testing
+pytest>=8.3.4
+pytest-asyncio>=0.24.0
+pytest-cov>=6.0.0
+pytest-mock>=3.14.0
+httpx>=0.28.1  # Para testing de FastAPI
+
+# Linting y formateo
+ruff>=0.8.4
+black>=24.10.0
+isort>=5.13.2
+mypy>=1.13.0
+
+# Type stubs
+types-redis>=4.6.0
+types-toml>=0.10.8
+
+# Pre-commit hooks
+pre-commit>=4.0.1
+
+# Debugging
+ipython>=8.31.0
+ipdb>=0.13.13
+
+# Documentation
+mkdocs>=1.6.1
+mkdocs-material>=9.5.47

@@ -57,12 +57,14 @@ Al solicitar un feature:
 ### Setup
 
 1. **Fork y clonar el repositorio**
+
    ```bash
    git clone https://github.com/tu-usuario/lunt.git
    cd lunt
    ```
 
 2. **Configurar entorno Python**
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # Windows: venv\Scripts\activate
@@ -71,17 +73,20 @@ Al solicitar un feature:
    ```
 
 3. **Configurar pre-commit hooks**
+
    ```bash
    pre-commit install
    ```
 
 4. **Configurar entorno Node.js**
+
    ```bash
    cd web
    npm install
    ```
 
 5. **Levantar servicios con Docker**
+
    ```bash
    cd infra
    docker-compose up -d
@@ -98,6 +103,7 @@ Al solicitar un feature:
 ### Python (Backend)
 
 #### Formateo
+
 - Usar **Black** con línea de 100 caracteres
 - Usar **isort** para organizar imports
 
@@ -107,6 +113,7 @@ isort api/
 ```
 
 #### Linting
+
 - Usar **Ruff** para linting
 - Seguir PEP 8
 
@@ -115,6 +122,7 @@ ruff check api/
 ```
 
 #### Type Hints
+
 - Usar type hints en todas las funciones
 - Usar `typing` para tipos complejos
 
@@ -124,10 +132,10 @@ from typing import Optional, List, Dict
 async def get_concept(codigo: str) -> Optional[Concept]:
     """
     Obtiene un concepto por código.
-    
+
     Args:
         codigo: Código del concepto
-        
+
     Returns:
         Objeto Concept o None si no existe
     """
@@ -135,10 +143,12 @@ async def get_concept(codigo: str) -> Optional[Concept]:
 ```
 
 #### Docstrings
+
 - Usar Google-style docstrings
 - Documentar parámetros, retornos y excepciones
 
 #### Naming Conventions
+
 - **Variables/Funciones**: `snake_case`
 - **Clases**: `PascalCase`
 - **Constantes**: `UPPER_SNAKE_CASE`
@@ -147,6 +157,7 @@ async def get_concept(codigo: str) -> Optional[Concept]:
 ### TypeScript (Frontend)
 
 #### Formateo
+
 - Usar **Prettier** con configuración del proyecto
 
 ```bash
@@ -154,6 +165,7 @@ npm run format
 ```
 
 #### Linting
+
 - Usar **ESLint** con configuración React/TypeScript
 
 ```bash
@@ -162,14 +174,15 @@ npm run lint:fix
 ```
 
 #### Type Safety
+
 - Strict mode activado
 - Evitar `any`, usar tipos específicos
 - Definir interfaces para props y state
 
 ```typescript
 interface PriceBreakdownProps {
-  preview: PreviewResponse
-  onEdit?: (codigo: string, precio: number) => void
+  preview: PreviewResponse;
+  onEdit?: (codigo: string, precio: number) => void;
 }
 
 export function PriceBreakdown({ preview, onEdit }: PriceBreakdownProps) {
@@ -178,6 +191,7 @@ export function PriceBreakdown({ preview, onEdit }: PriceBreakdownProps) {
 ```
 
 #### Naming Conventions
+
 - **Variables/Funciones**: `camelCase`
 - **Componentes**: `PascalCase`
 - **Interfaces**: `PascalCase` con prefijo `I` opcional
@@ -271,6 +285,7 @@ en lugar de un diccionario. Los clientes deben actualizar su código.
 ## Proceso de Pull Request
 
 1. **Crear una rama feature**
+
    ```bash
    git checkout -b feat/nueva-funcionalidad
    # o
@@ -278,35 +293,40 @@ en lugar de un diccionario. Los clientes deben actualizar su código.
    ```
 
 2. **Hacer commits atómicos**
+
    - Cada commit debe ser una unidad lógica de cambio
    - Seguir convenciones de commits
 
 3. **Mantener la rama actualizada**
+
    ```bash
    git fetch origin
    git rebase origin/main
    ```
 
 4. **Ejecutar tests**
+
    ```bash
    # Backend
    pytest
-   
+
    # Frontend
    npm test
    ```
 
 5. **Verificar code quality**
+
    ```bash
    # Backend
    black --check api/
    ruff check api/
-   
+
    # Frontend
    npm run lint
    ```
 
 6. **Push de la rama**
+
    ```bash
    git push origin feat/nueva-funcionalidad
    ```
@@ -394,7 +414,7 @@ async def test_calculate_precio_unitario(pricing_engine):
     """Test que verifica el cálculo de precio unitario."""
     costo_directo = 100.0
     result = await pricing_engine.calculate_precio_unitario(costo_directo)
-    
+
     assert result.indirectos == 15.0
     assert result.utilidad == 10.0
     assert result.precio_unitario == 125.0
@@ -444,23 +464,27 @@ web/src/
 - Mockear API calls
 
 ```typescript
-import { render, screen, fireEvent } from '@testing-library/react'
-import { PriceBreakdownTable } from './PriceBreakdownTable'
+import { render, screen, fireEvent } from "@testing-library/react";
+import { PriceBreakdownTable } from "./PriceBreakdownTable";
 
-describe('PriceBreakdownTable', () => {
-  it('renders breakdown items correctly', () => {
+describe("PriceBreakdownTable", () => {
+  it("renders breakdown items correctly", () => {
     const preview = {
       breakdown: [
-        { codigo_insumo: 'MAT-001', descripcion: 'Block', precio_unitario: 15.50 }
-      ]
-    }
-    
-    render(<PriceBreakdownTable preview={preview} />)
-    
-    expect(screen.getByText('Block')).toBeInTheDocument()
-    expect(screen.getByText('$15.50')).toBeInTheDocument()
-  })
-})
+        {
+          codigo_insumo: "MAT-001",
+          descripcion: "Block",
+          precio_unitario: 15.5,
+        },
+      ],
+    };
+
+    render(<PriceBreakdownTable preview={preview} />);
+
+    expect(screen.getByText("Block")).toBeInTheDocument();
+    expect(screen.getByText("$15.50")).toBeInTheDocument();
+  });
+});
 ```
 
 #### Ejecutar Tests
@@ -485,7 +509,7 @@ npm run test:coverage
 - FastAPI genera documentación automática
 - Incluir ejemplos de request/response
 
-```python
+````python
 @router.post("/preview", response_model=PreviewResponse)
 async def create_preview(
     request: PreviewRequest,
@@ -493,20 +517,20 @@ async def create_preview(
 ) -> PreviewResponse:
     """
     Genera una vista previa de cotización para un concepto.
-    
+
     Este endpoint calcula el costo directo, indirectos, utilidad y precio
     unitario basándose en los precios actuales de insumos.
-    
+
     Args:
         request: Datos de la solicitud (concepto, cantidad, locación)
         db: Sesión de base de datos
-        
+
     Returns:
         Vista previa con breakdown de precios y totales
-        
+
     Raises:
         HTTPException: Si el concepto no existe o no tiene receta
-        
+
     Example:
         ```json
         POST /v1/preview
@@ -518,7 +542,7 @@ async def create_preview(
         ```
     """
     ...
-```
+````
 
 ### README y Guías
 

@@ -1,0 +1,9 @@
+--- a/db/alembic.ini
++++ b/db/alembic.ini
+@@ -1,5 +1,5 @@
+ [alembic]
+-script_location = db/alembic
++script_location = %(here)s/alembic
+ prepend_sys_path = .
+ version_path_separator = os
+ 

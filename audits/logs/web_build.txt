@@ -1,0 +1,14 @@
+
+> lunt-web@1.0.0 build
+> tsc && vite build
+
+src/App.tsx(2,21): error TS6133: 'PreviewResponse' is declared but its value is never read.
+src/App.tsx(2,44): error TS2307: Cannot find module '@/lib/api' or its corresponding type declarations.
+src/App.tsx(3,26): error TS2307: Cannot find module '@/store/useDraft' or its corresponding type declarations.
+src/App.tsx(4,33): error TS2307: Cannot find module '@/components/PriceBreakdownTable' or its corresponding type declarations.
+src/App.tsx(5,24): error TS2307: Cannot find module '@/components/LineSeries' or its corresponding type declarations.
+src/components/LineSeries.tsx(11,29): error TS2307: Cannot find module '@/lib/api' or its corresponding type declarations.
+src/components/PriceBreakdownTable.tsx(1,33): error TS2307: Cannot find module '@/lib/api' or its corresponding type declarations.
+src/components/PriceBreakdownTable.tsx(2,26): error TS2307: Cannot find module '@/store/useDraft' or its corresponding type declarations.
+src/components/PriceBreakdownTable.tsx(32,35): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/store/useDraft.ts(2,48): error TS2307: Cannot find module '@/lib/api' or its corresponding type declarations.

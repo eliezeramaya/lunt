@@ -1,0 +1,54 @@
+--- /dev/null
++++ b/desktop/.gitkeep
+@@ -0,0 +1 @@
++# Placeholder for desktop Tauri application
+--- /dev/null
++++ b/desktop/README.md
+@@ -0,0 +1,25 @@
++# Lunt Desktop - Tauri Application
++
++**Estado**: 🚧 En planificación
++
++## Descripción
++
++Aplicación de escritorio multiplataforma para Lunt, construida con Tauri (Rust + TypeScript).
++
++## Características Planificadas
++
++- Acceso offline con cache local (SQLite)
++- Sincronización con API
++- Notificaciones nativas
++- Integración con sistema de archivos
++- Auto-updates
++
++## Roadmap
++
++- [ ] v0.1: Estructura básica de Tauri
++- [ ] v0.2: Integración con API
++- [ ] v0.3: Cache local SQLite
++- [ ] v0.4: Sincronización offline
++- [ ] v1.0: Release inicial
++
++## Instalación (Pendiente)
+--- /dev/null
++++ b/desktop/package.json
+@@ -0,0 +1,15 @@
++{
++  "name": "@lunt/desktop",
++  "version": "0.0.1",
++  "private": true,
++  "description": "Lunt Desktop Application (Tauri)",
++  "scripts": {
++    "tauri": "tauri",
++    "dev": "tauri dev",
++    "build": "tauri build"
++  },
++  "dependencies": {},
++  "devDependencies": {
++    "@tauri-apps/cli": "^2.0.0"
++  }
++}
+--- /dev/null
++++ b/desktop/src-tauri/.gitkeep
+@@ -0,0 +1 @@
++# Placeholder for Tauri Rust source

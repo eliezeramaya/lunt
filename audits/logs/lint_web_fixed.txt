@@ -1,0 +1,17 @@
+
+> lunt-web@1.0.0 lint
+> eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
+
+
+/home/eliezer/lunt/web/postcss.config.cjs
+  1:1  error  Parsing error: 'import' and 'export' may appear only with 'sourceType: module'
+
+/home/eliezer/lunt/web/src/App.tsx
+   2:21  warning  'PreviewResponse' is defined but never used  @typescript-eslint/no-unused-vars
+  14:48  warning  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/home/eliezer/lunt/web/tailwind.config.cjs
+  2:1  error  Parsing error: 'import' and 'export' may appear only with 'sourceType: module'
+
+✖ 4 problems (2 errors, 2 warnings)
+

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { apiClient, PreviewResponse } from '@/lib/api'
+import { apiClient } from '@/lib/api'
 import { useDraft } from '@/store/useDraft'
 import PriceBreakdownTable from '@/components/PriceBreakdownTable'
 import LineSeries from '@/components/LineSeries'

@@ -1,0 +1,23 @@
+=== VERIFICACIÓN DE ESTRUCTURA ===
+✓ api/main.py
+✓ api/routers/preview.py
+✓ api/routers/recalc.py
+✓ api/routers/confirm.py
+✓ api/routers/series.py
+✓ api/services/pricing_engine.py
+✓ api/services/db.py
+✓ api/services/cache.py
+✓ api/services/validation.py
+✓ infra/docker-compose.yml
+✓ infra/Dockerfile.api
+✓ db/alembic.ini
+✓ data/seed/concepts.csv
+✓ data/etl/flow_prices.py
+✓ web/package.json
+✓ web/tsconfig.json
+✓ web/vite.config.ts
+✓ .env.example
+✓ requirements.txt
+✓ README.md
+
+✓ TODOS LOS ARCHIVOS ESENCIALES PRESENTES

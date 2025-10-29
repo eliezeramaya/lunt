@@ -1,0 +1,5 @@
+
+> lunt-web@1.0.0 build
+> tsc && vite build
+
+src/App.tsx(2,21): error TS6133: 'PreviewResponse' is declared but its value is never read.
