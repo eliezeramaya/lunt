@@ -2,11 +2,11 @@
 Data transformation utilities for ETL processes
 """
 
+
 import pandas as pd
-from typing import Dict, List
 
 
-def validate_price_record(record: Dict) -> bool:
+def validate_price_record(record: dict) -> bool:
     """Validate a single price record"""
     required_fields = ["insumo_code", "location_code", "price", "valid_from"]
 
@@ -41,7 +41,7 @@ def detect_outliers(df: pd.DataFrame, column: str, threshold: float = 3.0) -> pd
     return abs(z_scores) > threshold
 
 
-def aggregate_prices(df: pd.DataFrame, group_by: List[str]) -> pd.DataFrame:
+def aggregate_prices(df: pd.DataFrame, group_by: list[str]) -> pd.DataFrame:
     """
     Aggregate prices by specified columns
     Calculate mean, min, max prices

@@ -1,221 +1,319 @@
-# 🎯 Auditoría Técnica Completada - Proyecto Lunt
+# 📊 Sistema de Auditoría Continua para Lunt
 
-**Fecha**: 28 de Octubre, 2025
-**Branch**: `fix/audit-remediations-20251028`
-**Status**: ✅ **APROBADO CON OBSERVACIONES**
+Este directorio contiene el sistema completo de auditoría automatizada que verifica la salud y calidad del proyecto Lunt mediante **scripts locales idempotentes** y **integración con GitHub Actions**.
 
 ---
 
-## 📊 Resultados de la Auditoría
+## 🎯 Propósito
 
-### ✅ Verificaciones Exitosas
-
-- [x] Estructura de archivos: 20/20 esenciales presentes
-- [x] Backend API (FastAPI): Arquitectura completa
-- [x] Frontend Web (React): Build exitoso - `dist/` generado
-- [x] Docker Compose: Configuración válida (6 servicios)
-- [x] Alembic Migrations: Configurado correctamente
-- [x] Seed Data: 4 CSVs completos (68 registros totales)
-- [x] Documentación: README.md y CONTRIBUTING.md completos
-
-### 🔧 Correcciones Aplicadas
-
-1. ✅ PostCSS/Tailwind config: ESM → CommonJS
-2. ✅ TypeScript: Agregado path alias `@/*`
-3. ✅ ESLint: Instaladas dependencias faltantes
-4. ✅ App.tsx: Eliminado import sin usar
-
-### ⚠️ Observaciones (No bloquean desarrollo)
-
-- Python venv: Requiere instalación de paquetes del sistema
-- Docker: No instalado en WSL (código válido)
-- Desktop/Tauri: No implementado (documentado como "Planned")
+El sistema de auditoría proporciona:
+- ✅ **Verificación automática semanal** del estado del proyecto
+- 🔍 **Ejecución bajo demanda** (local o CI/CD)
+- 📝 **Reportes consolidados** con métricas Pass/Fail/Skip
+- 🛡️ **Tolerancia a fallos**: continúa aunque fallen checks individuales
+- 📦 **Artefactos históricos**: logs y summaries en `audits/history/`
 
 ---
 
-## 📁 Archivos Generados
+## 📁 Estructura de Directorios
 
 ```
 audits/
-├── EXECUTION_AUDIT.md          # Informe detallado con matriz completa
-├── EXECUTIVE_SUMMARY.md        # Resumen ejecutivo
-├── structure_check.sh          # Script de verificación
-├── tree.txt                    # Árbol del repositorio
-└── logs/                       # 13 archivos de evidencia
-    ├── structure_check.txt
-    ├── npm_install.txt
-    ├── web_build_final.txt
-    └── ...
-
-patches/
-├── 001-setup-python-env.sh     # Setup Python + venv + pip
-├── 002-setup-docker.sh         # Instalación Docker
-├── 003-init-tauri-structure.diff
-├── 004-fix-alembic-path.diff
-└── 005-fix-eslint-deps.diff
-
-requirements-dev.txt            # Dependencias de desarrollo
-
-web/
-├── dist/                       # ✅ Build generado
-│   ├── index.html (0.49 kB)
-│   └── assets/
-│       ├── index.css (8.57 kB)
-│       └── index.js (583 kB)
-└── package-lock.json           # Lockfile generado
+├── README.md                   # 📘 Este archivo
+├── run_local_audit.sh          # 🔧 Script maestro de auditoría local
+├── tools/
+│   └── now.sh                  # ⏰ Generador de timestamp (YYYYMMDD-HHMMSS)
+├── ci/
+│   └── report_merge.py         # 📊 Consolidador de reportes para CI/CD
+└── history/                    # 📦 Historial de auditorías
+    ├── 20241115-143000/
+    │   ├── SUMMARY.md          # Resumen con tabla de resultados
+    │   ├── tree.txt            # Estructura del repositorio
+    │   └── logs/               # Logs detallados de cada check
+    │       ├── 01-STRUCTURE.log
+    │       ├── 02-LINT-PYTHON.log
+    │       ├── ...
+    │       └── 10-WEB-BUILD.log
+    └── 20241122-090000/
+        └── ...
 ```
 
 ---
 
-## 🚀 Próximos Pasos
+## 🚀 Ejecución Local
 
-### 1. Revisar Informe de Auditoría
+### Requisitos Previos
+
+| Herramienta | Requerido | Propósito |
+|------------|-----------|-----------|
+| `bash` | ✅ Sí | Ejecución del script maestro |
+| `python` 3.12+ | ⚠️ Recomendado | Checks de linting y tests |
+| `venv` activo | ⚠️ Recomendado | Dependencias Python |
+| `docker` + `docker compose` | ⚠️ Opcional | Verificación de servicios |
+| `tree`, `curl`, `nc` | ⚠️ Opcional | Checks auxiliares |
+| `node` + `npm` | ⚠️ Opcional | Verificación del frontend |
+
+**Nota**: El sistema es **tolerante**: si falta una herramienta, marca el check como **SKIP** en lugar de fallar.
+
+---
+
+### Ejecución Básica
 
 ```bash
-cd ~/lunt
-cat audits/EXECUTIVE_SUMMARY.md
-cat audits/EXECUTION_AUDIT.md
+# Desde la raíz del proyecto Lunt
+bash audits/run_local_audit.sh
 ```
 
-### 2. Aplicar Setup de Entorno (si necesitas ejecutar localmente)
+### Output Esperado
 
-#### Opción A: Con Docker (Recomendado)
+El script genera:
+1. **Directorio timestamped**: `audits/history/YYYYMMDD-HHMMSS/`
+2. **SUMMARY.md**: Tabla con resultados Pass/Fail/Skip
+3. **tree.txt**: Estructura del repositorio
+4. **logs/*.log**: Logs detallados de cada verificación
 
-```bash
-# Instalar Docker Desktop for Windows con WSL2 integration
-# O ejecutar:
-bash patches/002-setup-docker.sh
+### Interpretación de Resultados
 
-# Levantar infraestructura
-cd infra
-docker compose up -d
+| Estado | Significado | Acción Requerida |
+|--------|-------------|------------------|
+| ✅ **PASS** | Check exitoso | Ninguna |
+| ❌ **FAIL** | Check falló | Revisar log específico en `logs/` |
+| ⏭️ **SKIP** | Dependencia no disponible | Instalar herramienta si es necesaria |
 
-# Ejecutar migraciones
-docker compose exec api alembic upgrade head
+---
 
-# Cargar seed data
-docker compose exec api python scripts/load_seed.py
+## 🔍 Checks Implementados
 
-# Verificar API
-curl http://localhost:8000/health
-```
+El script ejecuta **10 verificaciones independientes**:
 
-#### Opción B: Setup Python Local
+### 1. **STRUCTURE** - Estructura del Repositorio
+- **Qué verifica**: Existencia de archivos esenciales
+- **Herramientas**: `tree`, verificación de archivos
+- **Archivos clave**:
+  - `pyproject.toml`, `requirements.txt`
+  - `api/main.py`, `api/routers/`, `api/models/`
+  - `alembic.ini`, `migrations/versions/`
+  - `web/package.json`, `web/src/`, `web/public/`
+- **Falla si**: Faltan archivos críticos
 
-```bash
-# Instalar dependencias del sistema
-bash patches/001-setup-python-env.sh
+### 2. **LINT-PYTHON** - Linting de Python
+- **Qué verifica**: Calidad del código Python con `ruff` y `black`
+- **Herramientas**: `ruff check .`, `black --check .`
+- **Requisitos**: Virtual environment activado
+- **Falla si**: Hay errores de linting o formato
+- **Skip si**: No hay venv o no están instalados ruff/black
 
-# Activar entorno virtual
-source venv/bin/activate
+### 3. **LINT-WEB** - Linting del Frontend
+- **Qué verifica**: Calidad del código TypeScript/React
+- **Herramientas**: `eslint`, `prettier`
+- **Directorio**: `web/`
+- **Falla si**: Hay errores de linting o formato
+- **Skip si**: No existe `web/package.json` o no están instaladas las herramientas
 
-# Ejecutar tests
-pytest api/tests/ -v
+### 4. **DOCKER** - Estado de Docker Compose
+- **Qué verifica**: Validez de `docker-compose.yml` y estado de contenedores
+- **Comandos**: `docker compose config`, `docker compose ps`
+- **Falla si**: Configuración inválida o servicios no corriendo
+- **Skip si**: Docker no está instalado o no hay `docker-compose.yml`
 
-# Linters
-ruff check api/
-black --check api/
-```
+### 5. **ALEMBIC** - Migraciones de Base de Datos
+- **Qué verifica**: Estado de migraciones con Alembic
+- **Comandos**: `alembic current`, `alembic history`
+- **Falla si**: No hay migraciones aplicadas o historial vacío
+- **Skip si**: No existe `alembic.ini`
 
-### 3. Merge a Desarrollo
+### 6. **SEED** - Scripts de Seed Data
+- **Qué verifica**: Existencia de scripts de carga de datos
+- **Archivos**: `scripts/load_seed.py` o similar
+- **Falla si**: No existen scripts de seed
+- **Skip si**: N/A (verifica existencia)
 
-```bash
-# Revisar cambios
-git diff dev/eliezer..fix/audit-remediations-20251028
+### 7. **API** - Salud de la API
+- **Qué verifica**: Endpoints activos de FastAPI
+- **Endpoints**:
+  - `GET http://localhost:8000/health`
+  - `POST http://localhost:8000/v1/preview`
+- **Falla si**: API no responde o retorna errores
+- **Skip si**: Puerto 8000 no está escuchando
 
-# Merge
-git checkout dev/eliezer
-git merge fix/audit-remediations-20251028
+### 8. **PYTEST** - Suite de Tests
+- **Qué verifica**: Ejecución de tests con pytest
+- **Comando**: `PYTHONPATH=. pytest -v`
+- **Falla si**: Algún test falla
+- **Skip si**: pytest no está instalado o no hay tests
 
-# Push
-git push origin dev/eliezer
-```
+### 9. **ETL** - Scripts ETL
+- **Qué verifica**: Existencia de scripts ETL/data processing
+- **Directorios**: `etl/`, `data/etl/`, `scripts/etl/`
+- **Falla si**: No existen scripts ETL
+- **Skip si**: N/A (verifica existencia)
 
-### 4. Deploy a Staging (Opcional)
+### 10. **WEB-BUILD** - Build del Frontend
+- **Qué verifica**: Compilación exitosa del frontend
+- **Comando**: `npm run build` en `web/`
+- **Directorio output**: `web/dist/`
+- **Falla si**: Build falla o no genera `dist/`
+- **Skip si**: No existe `web/package.json` o no hay node_modules
 
-```bash
-# Crear tag
-git tag v0.1.0-audit-passed
-git push origin v0.1.0-audit-passed
+---
 
-# Deploy con Docker
-cd infra
-docker compose -f docker-compose.staging.yml up -d
+## 📄 Formato del SUMMARY.md
+
+Cada auditoría genera un `SUMMARY.md` con el siguiente formato:
+
+```markdown
+# Lunt Audit Report
+
+**Timestamp**: 2024-11-22 09:00:15 CST  
+**Branch**: `main`  
+**Commit**: `a1b2c3d`  
+**Host**: `lunt-ci-runner`  
+**User**: `github-actions`
+
+## Statistics
+
+| Metric | Value |
+|--------|-------|
+| Passed | 8 |
+| Failed | 1 |
+| Skipped | 1 |
+
+## Check Results
+
+| # | Check Name | Status | Log File |
+|---|------------|--------|----------|
+| 01 | STRUCTURE | ✅ PASS | `logs/01-STRUCTURE.log` |
+| 02 | LINT-PYTHON | ✅ PASS | `logs/02-LINT-PYTHON.log` |
+| 03 | LINT-WEB | ⏭️ SKIP | `logs/03-LINT-WEB.log` |
+| 04 | DOCKER | ✅ PASS | `logs/04-DOCKER.log` |
+| 05 | ALEMBIC | ✅ PASS | `logs/05-ALEMBIC.log` |
+| 06 | SEED | ✅ PASS | `logs/06-SEED.log` |
+| 07 | API | ❌ FAIL | `logs/07-API.log` |
+| 08 | PYTEST | ✅ PASS | `logs/08-PYTEST.log` |
+| 09 | ETL | ✅ PASS | `logs/09-ETL.log` |
+| 10 | WEB-BUILD | ✅ PASS | `logs/10-WEB-BUILD.log` |
+
+---
+
+**Final Status**: AUDIT FAILED ❌  
+*Review failed checks in the logs/ directory*
 ```
 
 ---
 
-## 📈 Métricas de la Auditoría
+## ☁️ Integración con GitHub Actions
 
-| Métrica                    | Valor       |
-| -------------------------- | ----------- |
-| Archivos verificados       | 40+         |
-| Líneas de código auditadas | ~3,800      |
-| Verificaciones realizadas  | 22          |
-| Verificaciones exitosas    | 15 ✅       |
-| Correcciones aplicadas     | 4 🔧        |
-| Bloqueadores de entorno    | 2 ⚠️        |
-| Parches generados          | 5           |
-| Build frontend             | ✅ SUCCESS  |
-| Tiempo total               | ~45 minutos |
+### Workflow: `.github/workflows/continuous-audit.yml`
+
+El sistema se ejecuta automáticamente en:
+
+1. **Semanal**: Domingos a las 3:00 AM (hora de México)
+2. **Manual**: Botón "Run workflow" en GitHub Actions UI
+3. **Pull Requests**: Automáticamente en PRs a `main` o `dev/**`
+
+### Artefactos Generados
+
+Cada ejecución en CI publica:
+- **audit-report-YYYYMMDD-HHMMSS**: Directorio completo con SUMMARY + logs
+- **audit-logs-YYYYMMDD-HHMMSS**: Solo los logs (para revisión rápida)
+
+**Retención**: 30 días
+
+### Job Summary
+
+GitHub Actions publica un resumen visual en la pestaña "Summary" con:
+- 📊 Tabla de estadísticas (Pass/Fail/Skip)
+- 🔍 Lista de logs con tamaños
+- 🔗 Links a artefactos descargables
+- 🟢/🔴/🟡 Badge de estado
 
 ---
 
-## 🎓 Lecciones Aprendidas
+## 🛠️ Troubleshooting
 
-### ✅ Buenas Prácticas Identificadas
+### Problema: "Docker not found - SKIP"
+**Causa**: Docker no está instalado o no está en PATH  
+**Solución**: Instalar Docker Engine o Docker Desktop
 
-1. **Arquitectura clara**: Separación Backend/Frontend/Data bien definida
-2. **Convenciones de commits**: Semantic commits implementados
-3. **Documentación completa**: README y CONTRIBUTING detallados
-4. **Docker Compose**: Infraestructura bien orquestada
-5. **TypeScript Strict**: Type safety configurado correctamente
+### Problema: "Python venv not activated - SKIP"
+**Causa**: No hay virtual environment activado  
+**Solución**:
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+pip install -r requirements.txt
+```
 
-### 🔧 Áreas de Mejora
+### Problema: "API health check failed"
+**Causa**: FastAPI no está corriendo en localhost:8000  
+**Solución**:
+```bash
+docker compose up -d  # Levantar servicios
+# O ejecutar manualmente:
+cd api && uvicorn main:app --reload
+```
 
-1. **CI/CD**: Agregar GitHub Actions
-2. **Testing**: Aumentar cobertura de tests
-3. **Desktop**: Implementar stub de Tauri
-4. **Monitoring**: Agregar observability stack
-5. **Auth**: Implementar JWT/OAuth2
+### Problema: "Multiple checks marked as SKIP"
+**Causa**: Entorno incompleto (falta Docker, venv, o herramientas)  
+**Solución**: Revisar logs específicos en `logs/*.log` para ver qué falta
+
+---
+
+## 🔧 Personalización
+
+### Agregar un Nuevo Check
+
+1. Editar `audits/run_local_audit.sh`
+2. Copiar template de función existente (ej. `check_01_structure`)
+3. Implementar lógica de verificación:
+   ```bash
+   check_11_custom_verification() {
+     local CHECK="11-CUSTOM"
+     local OUT="${LOG_DIR}/${CHECK}.log"
+     log_info "Running Custom Verification..."
+     
+     # Tu lógica aquí
+     if [ ... ]; then
+       record_result "$CHECK" "PASS"
+     else
+       record_result "$CHECK" "FAIL"
+     fi
+   }
+   ```
+4. Llamar desde `main()`: `check_11_custom_verification`
+
+### Modificar Frecuencia en CI
+
+Editar `.github/workflows/continuous-audit.yml`:
+```yaml
+schedule:
+  - cron: '0 15 * * 1,3,5'  # Lunes, Miércoles, Viernes a las 3 PM
+```
+
+---
+
+## 📚 Referencias
+
+- [GitHub Actions Docs](https://docs.github.com/en/actions)
+- [Bash Exit Codes](https://tldp.org/LDP/abs/html/exitcodes.html)
+- [Docker Compose CLI](https://docs.docker.com/compose/reference/)
+- [Alembic Docs](https://alembic.sqlalchemy.org/)
+- [pytest Docs](https://docs.pytest.org/)
 
 ---
 
 ## 📞 Soporte
 
-Si encuentras problemas:
-
-1. **Revisa logs**: `audits/logs/*`
-2. **Consulta patches**: `patches/*.{sh,diff}`
-3. **Lee documentación**: `audits/EXECUTION_AUDIT.md`
-4. **Abre issue**: Con evidencia de `audits/logs/`
-
----
-
-## ✅ Checklist de Cierre
-
-- [x] Auditoría ejecutada
-- [x] Correcciones aplicadas
-- [x] Build frontend exitoso
-- [x] Documentación generada
-- [x] Parches creados
-- [x] Commit realizado
-- [ ] Setup de entorno Python
-- [ ] Setup de Docker
-- [ ] Tests ejecutados
-- [ ] API validada
-- [ ] Merge a dev/eliezer
+Para reportar problemas con el sistema de auditoría:
+1. Revisar logs en `audits/history/<timestamp>/logs/`
+2. Buscar issues existentes en el repositorio
+3. Crear nuevo issue con:
+   - Timestamp de la auditoría fallida
+   - Logs relevantes (adjuntar archivos)
+   - Entorno (local vs CI/CD)
 
 ---
 
-**Estado del Proyecto**: ✅ **LISTO PARA DESARROLLO**
-
-El código generado es de **alta calidad** y cumple con las especificaciones. Las únicas limitaciones son de entorno de ejecución local, no del código en sí.
-
-**Recomendación**: Aprobar merge y continuar desarrollo. 🚀
-
----
-
-_Auditoría realizada por sistema automatizado_
-_Commit: 901e7cb_
-_Branch: fix/audit-remediations-20251028_
+**Última actualización**: 2024-11-22  
+**Versión del sistema**: 1.0.0  
+**Autor**: Equipo Lunt

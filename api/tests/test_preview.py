@@ -8,9 +8,7 @@ from api.main import app
 @pytest.mark.skip(reason="Requires database with concepts - integration test")
 async def test_preview_endpoint_not_found():
     """Test preview endpoint with non-existent concept"""
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post(
             "/v1/preview",
             json={
@@ -24,9 +22,7 @@ async def test_preview_endpoint_not_found():
 @pytest.mark.asyncio
 async def test_health_endpoint():
     """Test health check endpoint"""
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/health")
         assert response.status_code == 200
         data = response.json()

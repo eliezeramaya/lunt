@@ -8,19 +8,20 @@ import asyncio
 import csv
 import os
 import sys
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from api.models import Concept, ConceptRecipe, Insumo, InsumoPrice, Location, User
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://lunt_user:lunt_pass@localhost:5432/lunt_db")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgresql+asyncpg://lunt_user:lunt_pass@localhost:5432/lunt_db"
+)
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
@@ -66,7 +67,7 @@ async def load_concepts(session: AsyncSession) -> None:
     """Load concepts from CSV"""
     csv_path = Path(__file__).parent.parent / "data" / "seed" / "concepts.csv"
 
-    with open(csv_path, "r", encoding="utf-8") as f:
+    with open(csv_path, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             query = select(Concept).where(Concept.code == row["code"])
@@ -88,7 +89,7 @@ async def load_insumos(session: AsyncSession) -> None:
     """Load insumos from CSV"""
     csv_path = Path(__file__).parent.parent / "data" / "seed" / "insumos.csv"
 
-    with open(csv_path, "r", encoding="utf-8") as f:
+    with open(csv_path, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             query = select(Insumo).where(Insumo.code == row["code"])
@@ -110,7 +111,7 @@ async def load_concept_recipes(session: AsyncSession) -> None:
     """Load concept recipes from CSV"""
     csv_path = Path(__file__).parent.parent / "data" / "seed" / "concept_recipes.csv"
 
-    with open(csv_path, "r", encoding="utf-8") as f:
+    with open(csv_path, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             concept_query = select(Concept).where(Concept.code == row["concept_code"])
@@ -147,7 +148,7 @@ async def load_insumo_prices(session: AsyncSession) -> None:
     """Load insumo prices from CSV"""
     csv_path = Path(__file__).parent.parent / "data" / "seed" / "insumo_precios.csv"
 
-    with open(csv_path, "r", encoding="utf-8") as f:
+    with open(csv_path, encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             insumo_query = select(Insumo).where(Insumo.code == row["insumo_code"])
