@@ -3,65 +3,65 @@ name: Continuous Audit
 on:
   # Ejecución semanal: Domingos a las 3:00 AM (hora de México)
   schedule:
-    - cron: '0 9 * * 0'  # 09:00 UTC = 03:00 CST (Mexico City)
-  
+    - cron: "0 9 * * 0" # 09:00 UTC = 03:00 CST (Mexico City)
+
   # Ejecución manual desde GitHub UI
   workflow_dispatch:
     inputs:
       skip_cache:
-        description: 'Skip cache and force fresh install'
+        description: "Skip cache and force fresh install"
         required: false
         type: boolean
         default: false
-  
+
   # Ejecución en Pull Requests a main y dev/*
   pull_request:
     branches:
       - main
-      - 'dev/**'
+      - "dev/**"
     paths-ignore:
-      - '*.md'
-      - 'docs/**'
-      - '.github/**'
-      - '!.github/workflows/continuous-audit.yml'
+      - "*.md"
+      - "docs/**"
+      - ".github/**"
+      - "!.github/workflows/continuous-audit.yml"
 
 env:
-  PYTHON_VERSION: '3.12'
-  NODE_VERSION: '22'
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "22"
 
 jobs:
   audit:
     name: Run Continuous Audit
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    
+
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better analysis
-      
+          fetch-depth: 0 # Full history for better analysis
+
       - name: 🐍 Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: "pip"
           cache-dependency-path: |
             requirements.txt
             requirements-dev.txt
-      
+
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
-      
+
       - name: 🔧 Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y tree curl netcat-openbsd
-      
+
       - name: 🐍 Install Python Dependencies
         continue-on-error: true
         run: |
@@ -72,7 +72,7 @@ jobs:
           if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt || echo "Some dev dependencies failed to install"
           fi
-      
+
       - name: 📦 Install Web Dependencies
         continue-on-error: true
         working-directory: web
@@ -80,21 +80,21 @@ jobs:
           if [ -f package.json ]; then
             npm ci || npm install || echo "NPM install failed"
           fi
-      
+
       - name: 📊 Generate Timestamp
         id: timestamp
         run: |
           STAMP=$(date +"%Y%m%d-%H%M%S")
           echo "stamp=$STAMP" >> $GITHUB_OUTPUT
           echo "Audit timestamp: $STAMP"
-      
+
       - name: 🔍 Run Audit Script
         id: audit
         continue-on-error: true
         run: |
           bash audits/run_local_audit.sh
           echo "audit_exit_code=$?" >> $GITHUB_OUTPUT
-      
+
       - name: 📋 Find Latest Audit Directory
         id: find_audit
         run: |
@@ -105,12 +105,12 @@ jobs:
           fi
           echo "audit_dir=$LATEST_AUDIT" >> $GITHUB_OUTPUT
           echo "Latest audit: $LATEST_AUDIT"
-      
+
       - name: 📝 Generate CI Summary
         if: always()
         run: |
           python audits/ci/report_merge.py "${{ steps.find_audit.outputs.audit_dir }}" >> $GITHUB_STEP_SUMMARY
-      
+
       - name: 📤 Upload Audit Artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -119,7 +119,7 @@ jobs:
           path: ${{ steps.find_audit.outputs.audit_dir }}/
           retention-days: 30
           if-no-files-found: warn
-      
+
       - name: 📤 Upload Logs Separately
         if: always()
         uses: actions/upload-artifact@v4
@@ -128,7 +128,7 @@ jobs:
           path: ${{ steps.find_audit.outputs.audit_dir }}/logs/
           retention-days: 30
           if-no-files-found: warn
-      
+
       - name: 💬 Comment on PR (if applicable)
         if: github.event_name == 'pull_request' && always()
         uses: actions/github-script@v7
@@ -137,44 +137,44 @@ jobs:
             const fs = require('fs');
             const auditDir = '${{ steps.find_audit.outputs.audit_dir }}';
             const summaryPath = `${auditDir}/SUMMARY.md`;
-            
+
             let comment = '## 📊 Continuous Audit Report\n\n';
-            
+
             if (fs.existsSync(summaryPath)) {
               const summary = fs.readFileSync(summaryPath, 'utf8');
-              
+
               // Extract key stats
               const passedMatch = summary.match(/Passed.*?(\d+)/);
               const failedMatch = summary.match(/Failed.*?(\d+)/);
               const skippedMatch = summary.match(/Skipped.*?(\d+)/);
-              
+
               const passed = passedMatch ? passedMatch[1] : '0';
               const failed = failedMatch ? failedMatch[1] : '0';
               const skipped = skippedMatch ? skippedMatch[1] : '0';
-              
+
               comment += `**Results:**\n`;
               comment += `- ✅ Passed: ${passed}\n`;
               comment += `- ❌ Failed: ${failed}\n`;
               comment += `- ⏭️ Skipped: ${skipped}\n\n`;
-              
+
               if (failed > 0) {
                 comment += `⚠️ **Some checks failed!** Review the artifacts for details.\n\n`;
               } else {
                 comment += `✨ **All checks passed!**\n\n`;
               }
-              
+
               comment += `📦 [Download Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n`;
             } else {
               comment += '❌ Audit summary not found. Check workflow logs.\n';
             }
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: comment
             });
-      
+
       - name: ✅ Check Final Status
         if: always()
         run: |
