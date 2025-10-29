@@ -1,6 +1,9 @@
 """
 Prefect ETL Flow for Price Updates
 Extracts, transforms and loads price data from external sources
+
+NOTE: After loading prices, this flow refreshes the materialized view
+concept_precios_mensuales for fast time series queries.
 """
 
 import os
@@ -10,6 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 from prefect import flow, task
+from sqlalchemy import create_engine, text
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -61,8 +65,8 @@ def transform_price_data(df: pd.DataFrame) -> pd.DataFrame:
 @task
 def load_price_data(df: pd.DataFrame, connection_string: str) -> int:
     """
-    Load price data to database
-    Uses append-only strategy for immutable history
+    Load price data to database.
+    Uses append-only strategy for immutable history.
     """
     # TODO: Implement actual database load with SQLAlchemy
     # For now, save to temporary file
@@ -72,10 +76,50 @@ def load_price_data(df: pd.DataFrame, connection_string: str) -> int:
     return len(df)
 
 
+@task
+def refresh_materialized_view(connection_string: str) -> None:
+    """
+    Refresh materialized view for time series analysis.
+
+    Uses CONCURRENTLY to avoid blocking queries during refresh.
+    This requires a UNIQUE index on the MV (created in migration 003).
+
+    NOTE: If this fails with "relation does not exist", run migrations:
+    alembic upgrade head
+
+    Performance:
+    - CONCURRENTLY: Queries can run during refresh, but refresh takes longer
+    - Without CONCURRENTLY: Faster refresh, but table is locked
+    """
+    try:
+        engine = create_engine(connection_string)
+        with engine.connect() as conn:
+            # Refresh materialized view concurrently (non-blocking)
+            # NOTE: This works because we have a UNIQUE index from migration 003
+            conn.execute(text("REFRESH MATERIALIZED VIEW CONCURRENTLY concept_precios_mensuales"))
+            conn.commit()
+            print("✓ Materialized view refreshed successfully (CONCURRENTLY)")
+    except Exception as e:
+        # If MV doesn't exist yet (migrations not run), log warning but don't fail
+        # TODO: Consider making this mandatory once migrations are deployed
+        print(f"⚠ Warning: Could not refresh materialized view: {e}")
+        print("  Hint: Run 'alembic upgrade head' to create materialized views")
+    finally:
+        engine.dispose()
+
+
 @flow(name="Price Update ETL")
 def price_update_flow(source_path: str) -> int:
     """
-    Main ETL flow for updating prices
+    Main ETL flow for updating prices.
+
+    Steps:
+    1. Extract data from source
+    2. Transform and validate
+    3. Load to database
+    4. Refresh materialized view for fast queries
+
+    NOTE: Step 4 is critical for maintaining query performance on /v1/series endpoint
     """
     print("Starting Price Update ETL Flow")
 
@@ -86,8 +130,14 @@ def price_update_flow(source_path: str) -> int:
     clean_data = transform_price_data(raw_data)
 
     # Load
-    connection_string = os.getenv("DATABASE_URL", "postgresql://lunt_user:lunt_pass@localhost:5432/lunt_db")
+    connection_string = os.getenv(
+        "DATABASE_URL", "postgresql://lunt_user:lunt_pass@localhost:5432/lunt_db"
+    )
     records_loaded = load_price_data(clean_data, connection_string)
+
+    # Refresh materialized view (non-blocking)
+    # NOTE: This ensures time series queries remain fast
+    refresh_materialized_view(connection_string)
 
     print(f"ETL Flow completed. {records_loaded} records loaded.")
     return records_loaded
