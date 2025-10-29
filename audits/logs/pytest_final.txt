@@ -1,0 +1,199 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.3.4, pluggy-1.6.0 -- /home/eliezer/lunt/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/eliezer/lunt
+configfile: pyproject.toml
+plugins: asyncio-0.24.0, anyio-4.11.0
+asyncio: mode=Mode.STRICT, default_loop_scope=function
+collecting ... collected 5 items
+
+api/tests/test_preview.py::test_preview_endpoint_not_found FAILED        [ 20%]
+api/tests/test_preview.py::test_health_endpoint PASSED                   [ 40%]
+api/tests/test_pricing_engine.py::test_get_latest_price FAILED           [ 60%]
+api/tests/test_pricing_engine.py::test_pricing_engine_missing_price FAILED [ 80%]
+api/tests/test_pricing_engine.py::test_build_base_preview FAILED         [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_preview_endpoint_not_found ________________________
+
+    @pytest.mark.asyncio
+    async def test_preview_endpoint_not_found():
+        """Test preview endpoint with non-existent concept"""
+        async with AsyncClient(
+            transport=ASGITransport(app=app), base_url="http://test"
+        ) as client:
+            response = await client.post(
+                "/v1/preview",
+                json={
+                    "concept_code": "NONEXISTENT",
+                    "location_code": "MX-CDMX",
+                },
+            )
+>           assert response.status_code == 404
+E           assert 500 == 404
+E            +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+api/tests/test_preview.py:20: AssertionError
+____________________________ test_get_latest_price _____________________________
+
+async_engine = <async_generator object engine at 0x71d3e01931f0>
+
+    def _get_sync_engine_or_connection(
+        async_engine: Union[AsyncEngine, AsyncConnection]
+    ) -> Union[Engine, Connection]:
+        if isinstance(async_engine, AsyncConnection):
+            return async_engine._proxied
+    
+        try:
+>           return async_engine.sync_engine
+E           AttributeError: 'async_generator' object has no attribute 'sync_engine'
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py:1437: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+db_session = <async_generator object db_session at 0x71d3e0193d30>
+
+    @pytest.mark.asyncio
+    async def test_get_latest_price(db_session):
+        """Test getting latest price for an insumo"""
+>       async for session in db_session:
+
+api/tests/test_pricing_engine.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+api/tests/conftest.py:23: in db_session
+    async with async_session() as session:
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:1766: in __call__
+    return self.class_(**local_kw)
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:259: in __init__
+    sync_bind = engine._get_sync_engine_or_connection(bind)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+async_engine = <async_generator object engine at 0x71d3e01931f0>
+
+    def _get_sync_engine_or_connection(
+        async_engine: Union[AsyncEngine, AsyncConnection]
+    ) -> Union[Engine, Connection]:
+        if isinstance(async_engine, AsyncConnection):
+            return async_engine._proxied
+    
+        try:
+            return async_engine.sync_engine
+        except AttributeError as e:
+>           raise exc.ArgumentError(
+                "AsyncEngine expected, got %r" % async_engine
+            ) from e
+E           sqlalchemy.exc.ArgumentError: AsyncEngine expected, got <async_generator object engine at 0x71d3e01931f0>
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py:1439: ArgumentError
+______________________ test_pricing_engine_missing_price _______________________
+
+async_engine = <async_generator object engine at 0x71d3e0045a80>
+
+    def _get_sync_engine_or_connection(
+        async_engine: Union[AsyncEngine, AsyncConnection]
+    ) -> Union[Engine, Connection]:
+        if isinstance(async_engine, AsyncConnection):
+            return async_engine._proxied
+    
+        try:
+>           return async_engine.sync_engine
+E           AttributeError: 'async_generator' object has no attribute 'sync_engine'
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py:1437: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+db_session = <async_generator object db_session at 0x71d3e00456c0>
+
+    @pytest.mark.asyncio
+    async def test_pricing_engine_missing_price(db_session):
+        """Test that pricing engine raises error when price not found"""
+>       async for session in db_session:
+
+api/tests/test_pricing_engine.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+api/tests/conftest.py:23: in db_session
+    async with async_session() as session:
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:1766: in __call__
+    return self.class_(**local_kw)
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:259: in __init__
+    sync_bind = engine._get_sync_engine_or_connection(bind)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+async_engine = <async_generator object engine at 0x71d3e0045a80>
+
+    def _get_sync_engine_or_connection(
+        async_engine: Union[AsyncEngine, AsyncConnection]
+    ) -> Union[Engine, Connection]:
+        if isinstance(async_engine, AsyncConnection):
+            return async_engine._proxied
+    
+        try:
+            return async_engine.sync_engine
+        except AttributeError as e:
+>           raise exc.ArgumentError(
+                "AsyncEngine expected, got %r" % async_engine
+            ) from e
+E           sqlalchemy.exc.ArgumentError: AsyncEngine expected, got <async_generator object engine at 0x71d3e0045a80>
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py:1439: ArgumentError
+___________________________ test_build_base_preview ____________________________
+
+async_engine = <async_generator object engine at 0x71d3e0045d50>
+
+    def _get_sync_engine_or_connection(
+        async_engine: Union[AsyncEngine, AsyncConnection]
+    ) -> Union[Engine, Connection]:
+        if isinstance(async_engine, AsyncConnection):
+            return async_engine._proxied
+    
+        try:
+>           return async_engine.sync_engine
+E           AttributeError: 'async_generator' object has no attribute 'sync_engine'
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py:1437: AttributeError
+
+The above exception was the direct cause of the following exception:
+
+db_session = <async_generator object db_session at 0x71d3e0045f30>
+
+    @pytest.mark.asyncio
+    async def test_build_base_preview(db_session):
+        """Test building a complete preview"""
+>       async for session in db_session:
+
+api/tests/test_pricing_engine.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+api/tests/conftest.py:23: in db_session
+    async with async_session() as session:
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:1766: in __call__
+    return self.class_(**local_kw)
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py:259: in __init__
+    sync_bind = engine._get_sync_engine_or_connection(bind)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+async_engine = <async_generator object engine at 0x71d3e0045d50>
+
+    def _get_sync_engine_or_connection(
+        async_engine: Union[AsyncEngine, AsyncConnection]
+    ) -> Union[Engine, Connection]:
+        if isinstance(async_engine, AsyncConnection):
+            return async_engine._proxied
+    
+        try:
+            return async_engine.sync_engine
+        except AttributeError as e:
+>           raise exc.ArgumentError(
+                "AsyncEngine expected, got %r" % async_engine
+            ) from e
+E           sqlalchemy.exc.ArgumentError: AsyncEngine expected, got <async_generator object engine at 0x71d3e0045d50>
+
+venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py:1439: ArgumentError
+=========================== short test summary info ============================
+FAILED api/tests/test_preview.py::test_preview_endpoint_not_found - assert 500 == 404
+ +  where 500 = <Response [500 Internal Server Error]>.status_code
+FAILED api/tests/test_pricing_engine.py::test_get_latest_price - sqlalchemy.exc.ArgumentError: AsyncEngine expected, got <async_generator object engine at 0x71d3e01931f0>
+FAILED api/tests/test_pricing_engine.py::test_pricing_engine_missing_price - sqlalchemy.exc.ArgumentError: AsyncEngine expected, got <async_generator object engine at 0x71d3e0045a80>
+FAILED api/tests/test_pricing_engine.py::test_build_base_preview - sqlalchemy.exc.ArgumentError: AsyncEngine expected, got <async_generator object engine at 0x71d3e0045d50>
+========================= 4 failed, 1 passed in 0.73s ==========================

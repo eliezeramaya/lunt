@@ -31,7 +31,9 @@ async def test_get_latest_price(db_session):
 
     engine = PricingEngine(db_session)
     result = await engine.get_latest_price(
-        insumo_id=insumo.id, location_code="MX-CDMX", calculation_date=date(2025, 1, 15)
+        insumo_id=insumo.id,
+        location_code="MX-CDMX",
+        calculation_date=date(2025, 1, 15),
     )
 
     assert result == Decimal("10.50")
@@ -51,7 +53,9 @@ async def test_pricing_engine_missing_price(db_session):
 
     engine = PricingEngine(db_session)
     result = await engine.get_latest_price(
-        insumo_id=insumo.id, location_code="MX-CDMX", calculation_date=date(2025, 1, 15)
+        insumo_id=insumo.id,
+        location_code="MX-CDMX",
+        calculation_date=date(2025, 1, 15),
     )
 
     assert result is None

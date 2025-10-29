@@ -69,6 +69,10 @@ async def confirm_quote(
         )
 
     except KeyError as e:
-        raise HTTPException(status_code=400, detail=f"Campo faltante en calculated_data: {str(e)}")
+        raise HTTPException(
+            status_code=400, detail=f"Campo faltante en calculated_data: {str(e)}"
+        ) from e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al confirmar cotizacion: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error al confirmar cotizacion: {str(e)}"
+        ) from e
