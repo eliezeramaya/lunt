@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🚀 Bienvenido a Lunt</h1>
+        <h1>Bienvenido a Lunt</h1>
         <p>Proyecto configurado y listo para desarrollo</p>
         <div className="card">
           <button onClick={() => setCount((count) => count + 1)}>

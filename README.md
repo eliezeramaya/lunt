@@ -2,20 +2,20 @@
 
 Aplicación web moderna construida con React + Vite.
 
-## 🚀 Stack Tecnológico
+## Stack Tecnológico
 
 - **React 18.3** - Librería de UI
 - **Vite 6** - Build tool y dev server
 - **ESLint** - Linting de código
 - **Prettier** - Formateo de código
 
-## 📦 Instalación
+## Instalación
 
 ```bash
 npm install
 ```
 
-## 🛠️ Desarrollo
+## Desarrollo
 
 ```bash
 npm run dev
@@ -23,19 +23,19 @@ npm run dev
 
 El servidor se levantará en `http://localhost:3000`
 
-## 🏗️ Build
+## Build
 
 ```bash
 npm run build
 ```
 
-## 🧪 Preview de producción
+## Preview de producción
 
 ```bash
 npm run preview
 ```
 
-## 📝 Scripts disponibles
+## Scripts disponibles
 
 - `npm run dev` - Inicia el servidor de desarrollo
 - `npm run build` - Genera build de producción
@@ -44,7 +44,7 @@ npm run preview
 - `npm run lint:fix` - Ejecuta ESLint y corrige automáticamente
 - `npm run format` - Formatea el código con Prettier
 
-## 🗂️ Estructura del proyecto
+## Estructura del proyecto
 
 ```
 lunt/
@@ -59,10 +59,10 @@ lunt/
 └── README.md
 ```
 
-## 👨‍💻 Desarrollo
+## Desarrollo
 
 Este proyecto está configurado para trabajar en WSL Ubuntu con VS Code Remote.
 
 ---
 
-Creado con ❤️ por Eliezer
+Creado por Eliezer
