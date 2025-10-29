@@ -1,0 +1,17 @@
+code,description,unit,category
+MAT-001,Block hueco 15x20x40 cm,pza,material
+MAT-002,Cemento gris CPC 30R,kg,material
+MAT-003,Arena,m3,material
+MAT-004,Grava 3/4,m3,material
+MAT-005,Varilla corrugada 3/8,kg,material
+MAT-006,Alambre recocido calibre 18,kg,material
+MAT-007,Yeso,kg,material
+MAT-008,Pintura vinilica,lt,material
+MO-001,Peon,jor,mano_obra
+MO-002,Oficial albanil,jor,mano_obra
+MO-003,Ayudante de albanil,jor,mano_obra
+MO-004,Oficial electricista,jor,mano_obra
+EQ-001,Revolvedora de concreto 1 saco,hr,equipo
+EQ-002,Vibrador para concreto,hr,equipo
+EQ-003,Compactador manual tipo bailarina,hr,equipo
+HER-001,Herramienta menor,porcentaje,herramienta

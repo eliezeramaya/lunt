@@ -1,0 +1,11 @@
+code,description,unit,category
+ALB-001,Muro de block hueco 15x20x40 cm asentado con mortero,m2,albanileria
+ALB-002,Cadena de desplante de concreto armado 15x20 cm,m,albanileria
+ALB-003,Castillo de concreto armado 15x15 cm,m,albanileria
+EXC-001,Excavacion a mano en material tipo I,m3,excavacion
+EXC-002,Relleno compactado con material de banco,m3,excavacion
+CON-001,Losa maciza de concreto armado fc=250 kg/cm2 e=10 cm,m2,concreto
+CON-002,Columna de concreto armado fc=250 kg/cm2 30x30 cm,m,concreto
+ACB-001,Acabado de yeso en muros,m2,acabados
+ACB-002,Pintura vinilica dos manos en muros,m2,acabados
+INS-001,Instalacion electrica salida de contacto,pza,instalaciones

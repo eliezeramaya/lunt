@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lunt-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-lunt_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lunt_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-lunt_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lunt_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lunt-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: lunt-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lunt-network
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile.api
+    container_name: lunt-api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-lunt_user}:${POSTGRES_PASSWORD:-lunt_pass}@db:5432/${POSTGRES_DB:-lunt_db}
+      REDIS_URL: redis://redis:6379/0
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      DEBUG: ${DEBUG:-true}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ../api:/app/api
+      - ../data:/app/data
+    networks:
+      - lunt-network
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: lunt-metabase
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: ${POSTGRES_DB:-lunt_db}
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${POSTGRES_USER:-lunt_user}
+      MB_DB_PASS: ${POSTGRES_PASSWORD:-lunt_pass}
+      MB_DB_HOST: db
+    ports:
+      - "${METABASE_PORT:-3001}:3000"
+    depends_on:
+      - db
+    volumes:
+      - metabase_data:/metabase-data
+    networks:
+      - lunt-network
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: lunt-qdrant
+    ports:
+      - "${QDRANT_PORT:-6333}:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - lunt-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: lunt-minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - lunt-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  metabase_data:
+  qdrant_data:
+  minio_data:
+
+networks:
+  lunt-network:
+    driver: bridge
