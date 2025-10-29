@@ -1,6 +1,7 @@
 # Estado del Proyecto Lunt
-**Última Actualización**: 2025-01-28 19:45 UTC  
-**Fase**: Post-Setup / Pre-Testing  
+
+**Última Actualización**: 2025-01-28 19:45 UTC
+**Fase**: Post-Setup / Pre-Testing
 **Estado General**: 🟡 OPERATIVO CON OBSERVACIONES
 
 ---
@@ -8,6 +9,7 @@
 ## RESUMEN EJECUTIVO
 
 ### Stack Tecnológico
+
 ```
 Backend:  FastAPI 0.115.5 + SQLAlchemy 2.0.36 + PostgreSQL 16
 Frontend: React 18.3.1 + Vite 6 + TypeScript 5.7.2
@@ -17,20 +19,22 @@ Testing:  Pytest 8.3.4 + Ruff 0.8.4 + Black 24.10.0
 ```
 
 ### Métricas de Calidad
-| Componente | Estado | Progreso | Observaciones |
-|-----------|--------|----------|---------------|
-| Backend API | ✅ LISTO | 100% | Formateado y lintado |
-| Frontend Web | ✅ BUILD OK | 100% | 583KB JS, 8.5KB CSS |
-| Tests | ❌ FALLAN | 0% | 5 tests requieren fix |
-| Docker | ⏸️ PENDIENTE | 0% | Requiere instalación |
-| Migraciones | ⏸️ PENDIENTE | 0% | Requiere DB activa |
-| Seed Data | ⏸️ PENDIENTE | 0% | Requiere DB activa |
+
+| Componente   | Estado       | Progreso | Observaciones         |
+| ------------ | ------------ | -------- | --------------------- |
+| Backend API  | ✅ LISTO     | 100%     | Formateado y lintado  |
+| Frontend Web | ✅ BUILD OK  | 100%     | 583KB JS, 8.5KB CSS   |
+| Tests        | ❌ FALLAN    | 0%       | 5 tests requieren fix |
+| Docker       | ⏸️ PENDIENTE | 0%       | Requiere instalación  |
+| Migraciones  | ⏸️ PENDIENTE | 0%       | Requiere DB activa    |
+| Seed Data    | ⏸️ PENDIENTE | 0%       | Requiere DB activa    |
 
 ---
 
 ## INSTALACIÓN COMPLETADA
 
 ### ✅ Entorno Python 3.12.3
+
 ```bash
 ✅ python3.12-venv instalado
 ✅ pip 25.3 actualizado
@@ -40,11 +44,13 @@ Testing:  Pytest 8.3.4 + Ruff 0.8.4 + Black 24.10.0
 ```
 
 **Comando de Activación**:
+
 ```bash
 cd /home/eliezer/lunt && source venv/bin/activate
 ```
 
 ### ✅ Herramientas de Desarrollo
+
 ```bash
 ✅ ruff 0.8.4      (linter moderno)
 ✅ black 24.10.0   (formatter PEP 8)
@@ -53,6 +59,7 @@ cd /home/eliezer/lunt && source venv/bin/activate
 ```
 
 ### ✅ Dependencias Backend
+
 ```toml
 fastapi==0.115.5
 sqlalchemy==2.0.36
@@ -74,11 +81,13 @@ pytest-asyncio==0.24.0
 ## AUDITORÍA TÉCNICA
 
 ### Ejecutada: 2025-01-28
-**Auditor**: Sistema automatizado  
-**Cobertura**: 22 verificaciones  
+
+**Auditor**: Sistema automatizado
+**Cobertura**: 22 verificaciones
 **Resultado**: APROBADO CON OBSERVACIONES
 
 #### Hallazgos Principales
+
 ```
 ✅ 15/22 verificaciones PASS (68%)
 ⚠️  4/22 correcciones aplicadas
@@ -87,12 +96,14 @@ pytest-asyncio==0.24.0
 ```
 
 #### Correcciones Aplicadas
+
 1. **PostCSS/Tailwind**: export default → module.exports
-2. **TypeScript**: Agregado baseUrl y paths @/*
+2. **TypeScript**: Agregado baseUrl y paths @/\*
 3. **ESLint**: 3 deps faltantes instaladas
 4. **python-multipart**: 0.0.19 → 0.0.9 (conflicto resuelto)
 
 #### Documentos Generados
+
 ```
 audits/EXECUTION_AUDIT.md      (600+ líneas)
 audits/EXECUTIVE_SUMMARY.md    (resumen ejecutivo)
@@ -106,6 +117,7 @@ patches/*.sh                   (5 scripts de remediación)
 ## LINTING Y FORMATEO
 
 ### Ruff: 87% PASS
+
 ```
 98 errores detectados
 92 errores corregidos automáticamente (94%)
@@ -117,6 +129,7 @@ patches/*.sh                   (5 scripts de remediación)
 **Estado**: 🟢 **ACEPTABLE** (errores menores, no bloqueantes)
 
 ### Black: 100% PASS
+
 ```
 7 archivos reformateados
 16 archivos sin cambios necesarios
@@ -126,6 +139,7 @@ Código conforme PEP 8
 **Estado**: 🟢 **PERFECTO**
 
 ### Pytest: 0% PASS
+
 ```
 5 tests ejecutados
 5 tests fallidos (100%)
@@ -140,6 +154,7 @@ Código conforme PEP 8
 ## ESTRUCTURA DEL PROYECTO
 
 ### Directorios Principales
+
 ```
 /home/eliezer/lunt/
 ├── api/                      Backend FastAPI
@@ -170,6 +185,7 @@ Código conforme PEP 8
 ```
 
 ### Archivos de Configuración
+
 ```
 ✅ pyproject.toml           (ruff, black, pytest)
 ✅ alembic.ini              (migraciones DB)
@@ -186,7 +202,9 @@ Código conforme PEP 8
 ## PRÓXIMOS PASOS
 
 ### 🔴 PRIORIDAD ALTA (Bloqueantes)
+
 1. **Actualizar Tests HTTPX** (30 min)
+
    ```python
    # test_preview.py - Usar ASGITransport
    from httpx import ASGITransport
@@ -198,6 +216,7 @@ Código conforme PEP 8
    ```
 
 2. **Corregir Fixtures Async** (45 min)
+
    ```python
    # test_pricing_engine.py - Agregar async/await
    @pytest.mark.asyncio
@@ -214,19 +233,23 @@ Código conforme PEP 8
    ```
 
 ### 🟡 PRIORIDAD MEDIA (Mejoras)
+
 4. **Instalar Docker** (15 min)
+
    ```bash
    # Opción A: Docker Desktop para Windows con WSL2
    # Opción B: Script patches/002-setup-docker.sh
    ```
 
 5. **Ejecutar Migraciones** (10 min)
+
    ```bash
    docker compose up -d postgres
    docker compose exec api alembic upgrade head
    ```
 
 6. **Cargar Seed Data** (5 min)
+
    ```bash
    docker compose exec api python scripts/load_seed.py
    ```
@@ -240,7 +263,9 @@ Código conforme PEP 8
    ```
 
 ### 🟢 PRIORIDAD BAJA (Opcional)
+
 8. **Configurar CI/CD** (1 hora)
+
    - GitHub Actions workflow
    - Pre-commit hooks
    - Coverage reporting
@@ -255,12 +280,14 @@ Código conforme PEP 8
 ## COMANDOS ÚTILES
 
 ### Activar Entorno
+
 ```bash
 cd /home/eliezer/lunt
 source venv/bin/activate
 ```
 
 ### Linting y Formateo
+
 ```bash
 # Verificar errores
 ruff check api/
@@ -276,6 +303,7 @@ black --check api/
 ```
 
 ### Testing
+
 ```bash
 # Ejecutar todos los tests
 PYTHONPATH=. pytest api/tests/ -v
@@ -288,6 +316,7 @@ PYTHONPATH=. pytest api/tests/test_preview.py::test_health_endpoint -v
 ```
 
 ### Docker
+
 ```bash
 # Levantar servicios
 cd infra && docker compose up -d
@@ -306,6 +335,7 @@ docker compose down
 ```
 
 ### Desarrollo Frontend
+
 ```bash
 cd web
 
@@ -327,6 +357,7 @@ npm run preview
 ## VARIABLES DE ENTORNO
 
 ### Backend (.env)
+
 ```bash
 # Database
 POSTGRES_SERVER=localhost
@@ -354,6 +385,7 @@ PREFECT_API_URL=http://localhost:4200/api
 ```
 
 ### Frontend (web/.env)
+
 ```bash
 VITE_API_URL=http://localhost:8000
 ```
@@ -363,6 +395,7 @@ VITE_API_URL=http://localhost:8000
 ## DEPENDENCIAS DEL SISTEMA
 
 ### ✅ Instaladas
+
 ```bash
 Python 3.12.3
 Node.js 22.20.0
@@ -377,12 +410,14 @@ zlib1g-dev
 ```
 
 ### ⏸️ Pendientes
+
 ```bash
 Docker Engine 27.x
 Docker Compose v2.29+
 ```
 
 **Instalación Docker**:
+
 ```bash
 # Método recomendado: Docker Desktop for Windows
 # https://docs.docker.com/desktop/install/windows-install/
@@ -396,45 +431,50 @@ bash patches/002-setup-docker.sh
 ## ESTADO DE FUNCIONALIDAD
 
 ### ✅ Backend API
-| Endpoint | Método | Estado | Descripción |
-|----------|--------|--------|-------------|
-| /health | GET | ✅ LISTO | Health check |
-| /v1/preview | POST | ✅ LISTO | Preview pricing |
-| /v1/recalc | POST | ✅ LISTO | Recalcular con ajustes |
-| /v1/confirm | POST | ✅ LISTO | Confirmar cotización |
-| /v1/series | GET | ✅ LISTO | Serie temporal precios |
-| /v1/concepts | GET | ⏸️ STUB | Buscar conceptos (NLU) |
+
+| Endpoint     | Método | Estado   | Descripción            |
+| ------------ | ------ | -------- | ---------------------- |
+| /health      | GET    | ✅ LISTO | Health check           |
+| /v1/preview  | POST   | ✅ LISTO | Preview pricing        |
+| /v1/recalc   | POST   | ✅ LISTO | Recalcular con ajustes |
+| /v1/confirm  | POST   | ✅ LISTO | Confirmar cotización   |
+| /v1/series   | GET    | ✅ LISTO | Serie temporal precios |
+| /v1/concepts | GET    | ⏸️ STUB  | Buscar conceptos (NLU) |
 
 ### ✅ Frontend Web
-| Página | Estado | Descripción |
-|--------|--------|-------------|
+
+| Página   | Estado   | Descripción             |
+| -------- | -------- | ----------------------- |
 | /preview | ✅ BUILD | Simulador de cotización |
-| /recalc | ✅ BUILD | Ajustar precios |
-| /series | ✅ BUILD | Análisis temporal |
-| /catalog | ⏸️ STUB | Catálogo insumos |
+| /recalc  | ✅ BUILD | Ajustar precios         |
+| /series  | ✅ BUILD | Análisis temporal       |
+| /catalog | ⏸️ STUB  | Catálogo insumos        |
 
 ### ⏸️ ETL Prefect
-| Flow | Estado | Descripción |
-|------|--------|-------------|
-| ingest_insumos | ⏸️ READY | Ingestión catálogo CMIC |
-| update_prices | ⏸️ READY | Actualización precios |
-| generate_report | ⏸️ READY | Reporte análisis |
+
+| Flow            | Estado   | Descripción             |
+| --------------- | -------- | ----------------------- |
+| ingest_insumos  | ⏸️ READY | Ingestión catálogo CMIC |
+| update_prices   | ⏸️ READY | Actualización precios   |
+| generate_report | ⏸️ READY | Reporte análisis        |
 
 ### ⏸️ Docker Services
-| Servicio | Puerto | Estado | Descripción |
-|----------|--------|--------|-------------|
-| postgres | 5432 | ⏸️ PENDIENTE | PostgreSQL 16 |
-| redis | 6379 | ⏸️ PENDIENTE | Redis 7 cache |
-| api | 8000 | ⏸️ PENDIENTE | FastAPI backend |
-| metabase | 3001 | ⏸️ PENDIENTE | Dashboards BI |
-| qdrant | 6333 | ⏸️ PENDIENTE | Vector DB (NLU) |
-| minio | 9000 | ⏸️ PENDIENTE | Object storage |
+
+| Servicio | Puerto | Estado       | Descripción     |
+| -------- | ------ | ------------ | --------------- |
+| postgres | 5432   | ⏸️ PENDIENTE | PostgreSQL 16   |
+| redis    | 6379   | ⏸️ PENDIENTE | Redis 7 cache   |
+| api      | 8000   | ⏸️ PENDIENTE | FastAPI backend |
+| metabase | 3001   | ⏸️ PENDIENTE | Dashboards BI   |
+| qdrant   | 6333   | ⏸️ PENDIENTE | Vector DB (NLU) |
+| minio    | 9000   | ⏸️ PENDIENTE | Object storage  |
 
 ---
 
 ## LOGS Y EVIDENCIAS
 
 ### Auditoría
+
 ```
 audits/logs/ruff_check.txt       (98 errores detectados)
 audits/logs/ruff_fix.txt         (92 correcciones aplicadas)
@@ -447,6 +487,7 @@ audits/logs/alembic_validate.txt (5 migraciones detectadas)
 ```
 
 ### Git
+
 ```
 Branch actual: fix/audit-remediations-20251028
 Commits: 2 (correcciones auditoría)
@@ -459,12 +500,14 @@ Sin merge a main (esperando tests verdes)
 ## CONTACTO Y RECURSOS
 
 ### Documentación Técnica
+
 - **API Docs**: http://localhost:8000/docs (cuando activo)
 - **Architecture**: `docs/ARCHITECTURE.md`
 - **Database Schema**: `docs/DATABASE.md`
 - **Deployment**: `docs/DEPLOYMENT.md`
 
 ### Comandos de Ayuda
+
 ```bash
 # Ver estado git
 git status
@@ -486,6 +529,7 @@ netstat -tuln | grep LISTEN
 ### Estado General: 🟡 OPERATIVO CON OBSERVACIONES
 
 **✅ Completado**:
+
 - Entorno Python funcional
 - Dependencias instaladas
 - Código formateado (PEP 8)
@@ -494,16 +538,19 @@ netstat -tuln | grep LISTEN
 - Auditoría documentada
 
 **⏸️ En Espera**:
+
 - Docker installation
 - Database migrations
 - Data seeding
 - API testing end-to-end
 
 **❌ Requiere Atención**:
+
 - Tests unitarios (5 fallos)
 - Exception chaining (7 mejoras)
 
 ### Tiempo Estimado a Producción
+
 ```
 ALTA prioridad (tests): 1.5 horas
 MEDIA prioridad (docker): 1 hora
@@ -513,6 +560,7 @@ TOTAL: ~5.5 horas de trabajo
 ```
 
 ### Próxima Acción Recomendada
+
 ```bash
 # 1. Actualizar tests (CRÍTICO)
 # Editar api/tests/test_preview.py
@@ -528,6 +576,6 @@ git commit -m "fix: actualizar tests HTTPX y async fixtures"
 
 ---
 
-**FIN DEL REPORTE**  
-**Generado**: 2025-01-28 19:45:00 UTC  
+**FIN DEL REPORTE**
+**Generado**: 2025-01-28 19:45:00 UTC
 **Próxima Revisión**: Después de actualizar tests
