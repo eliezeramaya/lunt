@@ -1,6 +1,5 @@
 from datetime import date
 from decimal import Decimal
-from typing import List, Optional
 
 from sqlalchemy import ForeignKey, Index, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -23,10 +22,10 @@ class Insumo(Base, TimestampMixin):
     category: Mapped[str] = mapped_column(String(50), nullable=False)
 
     # Relationships
-    prices: Mapped[List["InsumoPrice"]] = relationship(
+    prices: Mapped[list["InsumoPrice"]] = relationship(
         "InsumoPrice", back_populates="insumo", cascade="all, delete-orphan"
     )
-    recipes: Mapped[List["ConceptRecipe"]] = relationship("ConceptRecipe", back_populates="insumo")
+    recipes: Mapped[list["ConceptRecipe"]] = relationship("ConceptRecipe", back_populates="insumo")
 
     __table_args__ = (Index("ix_insumos_category", "category"),)
 
@@ -48,8 +47,8 @@ class InsumoPrice(Base, TimestampMixin):
     price: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
     currency: Mapped[str] = mapped_column(String(3), default="MXN", nullable=False)
     valid_from: Mapped[date] = mapped_column(nullable=False)
-    valid_until: Mapped[Optional[date]] = mapped_column(nullable=True)
-    source: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    valid_until: Mapped[date | None] = mapped_column(nullable=True)
+    source: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     # Relationships
     insumo: Mapped["Insumo"] = relationship("Insumo", back_populates="prices")

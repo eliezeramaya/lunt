@@ -1,0 +1,981 @@
+api/models/base.py:2:20: F401 [*] `typing.Any` imported but unused
+  |
+1 | from datetime import datetime
+2 | from typing import Any
+  |                    ^^^ F401
+3 | 
+4 | from sqlalchemy import DateTime, func
+  |
+  = help: Remove unused import: `typing.Any`
+
+api/models/concepts.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import date
+2 | from typing import List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from sqlalchemy import ForeignKey, Index, String, Text
+  |
+
+api/models/concepts.py:22:22: UP007 [*] Use `X | Y` for type annotations
+   |
+20 |     description: Mapped[str] = mapped_column(Text, nullable=False)
+21 |     unit: Mapped[str] = mapped_column(String(20), nullable=False)
+22 |     category: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+   |                      ^^^^^^^^^^^^^ UP007
+23 | 
+24 |     # Embeddings para búsqueda semántica (placeholder)
+   |
+   = help: Convert to `X | Y`
+
+api/models/concepts.py:25:30: UP007 [*] Use `X | Y` for type annotations
+   |
+24 |     # Embeddings para búsqueda semántica (placeholder)
+25 |     embedding_vector: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+   |                              ^^^^^^^^^^^^^ UP007
+26 | 
+27 |     # Relationships
+   |
+   = help: Convert to `X | Y`
+
+api/models/concepts.py:28:21: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+27 |     # Relationships
+28 |     recipes: Mapped[List["ConceptRecipe"]] = relationship(
+   |                     ^^^^ UP006
+29 |         "ConceptRecipe", back_populates="concept", cascade="all, delete-orphan"
+30 |     )
+   |
+   = help: Replace with `list`
+
+api/models/concepts.py:53:25: UP007 [*] Use `X | Y` for type annotations
+   |
+51 |     quantity: Mapped[float] = mapped_column(nullable=False)
+52 |     valid_from: Mapped[date] = mapped_column(nullable=False)
+53 |     valid_until: Mapped[Optional[date]] = mapped_column(nullable=True)
+   |                         ^^^^^^^^^^^^^^ UP007
+54 |     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+   |
+   = help: Convert to `X | Y`
+
+api/models/concepts.py:54:19: UP007 [*] Use `X | Y` for type annotations
+   |
+52 |     valid_from: Mapped[date] = mapped_column(nullable=False)
+53 |     valid_until: Mapped[Optional[date]] = mapped_column(nullable=True)
+54 |     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+   |                   ^^^^^^^^^^^^^ UP007
+55 | 
+56 |     # Relationships
+   |
+   = help: Convert to `X | Y`
+
+api/models/concepts.py:58:21: F821 Undefined name `Insumo`
+   |
+56 |     # Relationships
+57 |     concept: Mapped["Concept"] = relationship("Concept", back_populates="recipes")
+58 |     insumo: Mapped["Insumo"] = relationship("Insumo", back_populates="recipes")
+   |                     ^^^^^^ F821
+59 | 
+60 |     __table_args__ = (
+   |
+
+api/models/drafts_quotes.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+   |
+ 1 | / from datetime import datetime
+ 2 | | from decimal import Decimal
+ 3 | | from typing import Any, Dict, List, Optional
+ 4 | | 
+ 5 | | from sqlalchemy import ForeignKey, Index, JSON, Numeric, String, Text
+ 6 | | from sqlalchemy.orm import Mapped, mapped_column, relationship
+ 7 | | 
+ 8 | | from .base import Base, TimestampMixin
+ 9 | | 
+10 | | 
+11 | | class Draft(Base, TimestampMixin):
+   | |_^ I001
+12 |       """
+13 |       Borradores de cotizaciones en progreso
+   |
+   = help: Organize imports
+
+api/models/drafts_quotes.py:3:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+  |
+1 | from datetime import datetime
+2 | from decimal import Decimal
+3 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+4 | 
+5 | from sqlalchemy import ForeignKey, Index, JSON, Numeric, String, Text
+  |
+
+api/models/drafts_quotes.py:3:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import datetime
+2 | from decimal import Decimal
+3 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+4 | 
+5 | from sqlalchemy import ForeignKey, Index, JSON, Numeric, String, Text
+  |
+
+api/models/drafts_quotes.py:3:31: F401 [*] `typing.List` imported but unused
+  |
+1 | from datetime import datetime
+2 | from decimal import Decimal
+3 | from typing import Any, Dict, List, Optional
+  |                               ^^^^ F401
+4 | 
+5 | from sqlalchemy import ForeignKey, Index, JSON, Numeric, String, Text
+  |
+  = help: Remove unused import: `typing.List`
+
+api/models/drafts_quotes.py:27:23: UP006 [*] Use `dict` instead of `Dict` for type annotation
+   |
+26 |     # Resultados del cálculo
+27 |     breakdown: Mapped[Dict[str, Any]] = mapped_column(JSON, nullable=False)
+   |                       ^^^^ UP006
+28 |     costo_directo: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
+29 |     indirectos: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
+   |
+   = help: Replace with `dict`
+
+api/models/drafts_quotes.py:44:19: F821 Undefined name `User`
+   |
+43 |     # Relationships
+44 |     user: Mapped["User"] = relationship("User", back_populates="drafts")
+   |                   ^^^^ F821
+45 | 
+46 |     __table_args__ = (Index("ix_drafts_user_date", "user_id", "calculation_date"),)
+   |
+
+api/models/drafts_quotes.py:62:22: UP007 [*] Use `X | Y` for type annotations
+   |
+60 |     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+61 |     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+62 |     draft_id: Mapped[Optional[int]] = mapped_column(ForeignKey("drafts.id"), nullable=True)
+   |                      ^^^^^^^^^^^^^ UP007
+63 |     quote_number: Mapped[str] = mapped_column(
+64 |         String(50), unique=True, index=True, nullable=False
+   |
+   = help: Convert to `X | Y`
+
+api/models/drafts_quotes.py:73:23: UP006 [*] Use `dict` instead of `Dict` for type annotation
+   |
+72 |     # Snapshot inmutable del cálculo
+73 |     breakdown: Mapped[Dict[str, Any]] = mapped_column(JSON, nullable=False)
+   |                       ^^^^ UP006
+74 |     costo_directo: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
+75 |     indirectos: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
+   |
+   = help: Replace with `dict`
+
+api/models/drafts_quotes.py:89:19: UP007 [*] Use `X | Y` for type annotations
+   |
+88 |     # Metadata
+89 |     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+   |                   ^^^^^^^^^^^^^ UP007
+90 |     status: Mapped[str] = mapped_column(String(20), default="confirmed", nullable=False)
+   |
+   = help: Convert to `X | Y`
+
+api/models/drafts_quotes.py:93:19: F821 Undefined name `User`
+   |
+92 |     # Relationships
+93 |     user: Mapped["User"] = relationship("User", back_populates="quotes")
+   |                   ^^^^ F821
+94 | 
+95 |     __table_args__ = (
+   |
+
+api/models/insumos.py:3:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import date
+2 | from decimal import Decimal
+3 | from typing import List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+4 | 
+5 | from sqlalchemy import ForeignKey, Index, Numeric, String, Text
+  |
+
+api/models/insumos.py:26:20: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+25 |     # Relationships
+26 |     prices: Mapped[List["InsumoPrice"]] = relationship(
+   |                    ^^^^ UP006
+27 |         "InsumoPrice", back_populates="insumo", cascade="all, delete-orphan"
+28 |     )
+   |
+   = help: Replace with `list`
+
+api/models/insumos.py:29:21: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+27 |         "InsumoPrice", back_populates="insumo", cascade="all, delete-orphan"
+28 |     )
+29 |     recipes: Mapped[List["ConceptRecipe"]] = relationship("ConceptRecipe", back_populates="insumo")
+   |                     ^^^^ UP006
+30 | 
+31 |     __table_args__ = (Index("ix_insumos_category", "category"),)
+   |
+   = help: Replace with `list`
+
+api/models/insumos.py:29:27: F821 Undefined name `ConceptRecipe`
+   |
+27 |         "InsumoPrice", back_populates="insumo", cascade="all, delete-orphan"
+28 |     )
+29 |     recipes: Mapped[List["ConceptRecipe"]] = relationship("ConceptRecipe", back_populates="insumo")
+   |                           ^^^^^^^^^^^^^ F821
+30 | 
+31 |     __table_args__ = (Index("ix_insumos_category", "category"),)
+   |
+
+api/models/insumos.py:51:25: UP007 [*] Use `X | Y` for type annotations
+   |
+49 |     currency: Mapped[str] = mapped_column(String(3), default="MXN", nullable=False)
+50 |     valid_from: Mapped[date] = mapped_column(nullable=False)
+51 |     valid_until: Mapped[Optional[date]] = mapped_column(nullable=True)
+   |                         ^^^^^^^^^^^^^^ UP007
+52 |     source: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+   |
+   = help: Convert to `X | Y`
+
+api/models/insumos.py:52:20: UP007 [*] Use `X | Y` for type annotations
+   |
+50 |     valid_from: Mapped[date] = mapped_column(nullable=False)
+51 |     valid_until: Mapped[Optional[date]] = mapped_column(nullable=True)
+52 |     source: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+   |                    ^^^^^^^^^^^^^ UP007
+53 | 
+54 |     # Relationships
+   |
+   = help: Convert to `X | Y`
+
+api/models/users_locations.py:1:22: F401 [*] `datetime.datetime` imported but unused
+  |
+1 | from datetime import datetime
+  |                      ^^^^^^^^ F401
+2 | from typing import List, Optional
+  |
+  = help: Remove unused import: `datetime.datetime`
+
+api/models/users_locations.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import datetime
+2 | from typing import List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from sqlalchemy import ForeignKey, Index, String, Text
+  |
+
+api/models/users_locations.py:4:24: F401 [*] `sqlalchemy.ForeignKey` imported but unused
+  |
+2 | from typing import List, Optional
+3 | 
+4 | from sqlalchemy import ForeignKey, Index, String, Text
+  |                        ^^^^^^^^^^ F401
+5 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+  |
+  = help: Remove unused import
+
+api/models/users_locations.py:4:36: F401 [*] `sqlalchemy.Index` imported but unused
+  |
+2 | from typing import List, Optional
+3 | 
+4 | from sqlalchemy import ForeignKey, Index, String, Text
+  |                                    ^^^^^ F401
+5 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+  |
+  = help: Remove unused import
+
+api/models/users_locations.py:4:51: F401 [*] `sqlalchemy.Text` imported but unused
+  |
+2 | from typing import List, Optional
+3 | 
+4 | from sqlalchemy import ForeignKey, Index, String, Text
+  |                                                   ^^^^ F401
+5 | from sqlalchemy.orm import Mapped, mapped_column, relationship
+  |
+  = help: Remove unused import
+
+api/models/users_locations.py:18:19: UP007 [*] Use `X | Y` for type annotations
+   |
+16 |     code: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
+17 |     name: Mapped[str] = mapped_column(String(100), nullable=False)
+18 |     state: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+   |                   ^^^^^^^^^^^^^ UP007
+19 |     country: Mapped[str] = mapped_column(String(50), default="Mexico", nullable=False)
+   |
+   = help: Convert to `X | Y`
+
+api/models/users_locations.py:38:23: UP007 [*] Use `X | Y` for type annotations
+   |
+36 |     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
+37 |     is_superuser: Mapped[bool] = mapped_column(default=False, nullable=False)
+38 |     full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+   |                       ^^^^^^^^^^^^^ UP007
+39 | 
+40 |     # Relationships
+   |
+   = help: Convert to `X | Y`
+
+api/models/users_locations.py:41:20: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+40 |     # Relationships
+41 |     drafts: Mapped[List["Draft"]] = relationship("Draft", back_populates="user")
+   |                    ^^^^ UP006
+42 |     quotes: Mapped[List["Quote"]] = relationship("Quote", back_populates="user")
+   |
+   = help: Replace with `list`
+
+api/models/users_locations.py:41:26: F821 Undefined name `Draft`
+   |
+40 |     # Relationships
+41 |     drafts: Mapped[List["Draft"]] = relationship("Draft", back_populates="user")
+   |                          ^^^^^ F821
+42 |     quotes: Mapped[List["Quote"]] = relationship("Quote", back_populates="user")
+   |
+
+api/models/users_locations.py:42:20: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+40 |     # Relationships
+41 |     drafts: Mapped[List["Draft"]] = relationship("Draft", back_populates="user")
+42 |     quotes: Mapped[List["Quote"]] = relationship("Quote", back_populates="user")
+   |                    ^^^^ UP006
+43 | 
+44 |     def __repr__(self) -> str:
+   |
+   = help: Replace with `list`
+
+api/models/users_locations.py:42:26: F821 Undefined name `Quote`
+   |
+40 |     # Relationships
+41 |     drafts: Mapped[List["Draft"]] = relationship("Draft", back_populates="user")
+42 |     quotes: Mapped[List["Quote"]] = relationship("Quote", back_populates="user")
+   |                          ^^^^^ F821
+43 | 
+44 |     def __repr__(self) -> str:
+   |
+
+api/routers/confirm.py:72:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+71 |       except KeyError as e:
+72 |           raise HTTPException(
+   |  _________^
+73 | |             status_code=400, detail=f"Campo faltante en calculated_data: {str(e)}"
+74 | |         )
+   | |_________^ B904
+75 |       except Exception as e:
+76 |           raise HTTPException(status_code=500, detail=f"Error al confirmar cotizacion: {str(e)}")
+   |
+
+api/routers/confirm.py:76:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+74 |         )
+75 |     except Exception as e:
+76 |         raise HTTPException(status_code=500, detail=f"Error al confirmar cotizacion: {str(e)}")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+   |
+
+api/routers/preview.py:35:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+34 |     except ValueError as e:
+35 |         raise HTTPException(status_code=404, detail=str(e))
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+36 |     except Exception as e:
+37 |         raise HTTPException(status_code=500, detail=f"Error al calcular preview: {str(e)}")
+   |
+
+api/routers/preview.py:37:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+35 |         raise HTTPException(status_code=404, detail=str(e))
+36 |     except Exception as e:
+37 |         raise HTTPException(status_code=500, detail=f"Error al calcular preview: {str(e)}")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+   |
+
+api/routers/recalc.py:46:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+45 |     except ValueError as e:
+46 |         raise HTTPException(status_code=400, detail=str(e))
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+47 |     except Exception as e:
+48 |         raise HTTPException(status_code=500, detail=f"Error al recalcular: {str(e)}")
+   |
+
+api/routers/recalc.py:48:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+46 |         raise HTTPException(status_code=400, detail=str(e))
+47 |     except Exception as e:
+48 |         raise HTTPException(status_code=500, detail=f"Error al recalcular: {str(e)}")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+   |
+
+api/routers/series.py:77:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+75 |           raise
+76 |       except Exception as e:
+77 |           raise HTTPException(
+   |  _________^
+78 | |             status_code=500, detail=f"Error al obtener serie temporal: {str(e)}"
+79 | |         )
+   | |_________^ B904
+   |
+
+api/schemas/confirm.py:1:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+  |
+1 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+2 | 
+3 | from pydantic import BaseModel, Field
+  |
+
+api/schemas/confirm.py:1:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+2 | 
+3 | from pydantic import BaseModel, Field
+  |
+
+api/schemas/confirm.py:1:31: F401 [*] `typing.List` imported but unused
+  |
+1 | from typing import Any, Dict, List, Optional
+  |                               ^^^^ F401
+2 | 
+3 | from pydantic import BaseModel, Field
+  |
+  = help: Remove unused import: `typing.List`
+
+api/schemas/confirm.py:9:22: UP006 [*] Use `dict` instead of `Dict` for type annotation
+   |
+ 7 |     """Request para confirmar y guardar cotización"""
+ 8 | 
+ 9 |     calculated_data: Dict[str, Any] = Field(..., description="Datos del cálculo a confirmar")
+   |                      ^^^^ UP006
+10 |     notes: Optional[str] = Field(None, description="Notas adicionales")
+11 |     user_id: int = Field(1, description="ID del usuario (placeholder)")
+   |
+   = help: Replace with `dict`
+
+api/schemas/confirm.py:10:12: UP007 [*] Use `X | Y` for type annotations
+   |
+ 9 |     calculated_data: Dict[str, Any] = Field(..., description="Datos del cálculo a confirmar")
+10 |     notes: Optional[str] = Field(None, description="Notas adicionales")
+   |            ^^^^^^^^^^^^^ UP007
+11 |     user_id: int = Field(1, description="ID del usuario (placeholder)")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/preview.py:2:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+  |
+1 | from datetime import date
+2 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from pydantic import BaseModel, Field, field_validator
+  |
+
+api/schemas/preview.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import date
+2 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from pydantic import BaseModel, Field, field_validator
+  |
+
+api/schemas/preview.py:2:20: F401 [*] `typing.Any` imported but unused
+  |
+1 | from datetime import date
+2 | from typing import Any, Dict, List, Optional
+  |                    ^^^ F401
+3 | 
+4 | from pydantic import BaseModel, Field, field_validator
+  |
+  = help: Remove unused import
+
+api/schemas/preview.py:2:25: F401 [*] `typing.Dict` imported but unused
+  |
+1 | from datetime import date
+2 | from typing import Any, Dict, List, Optional
+  |                         ^^^^ F401
+3 | 
+4 | from pydantic import BaseModel, Field, field_validator
+  |
+  = help: Remove unused import
+
+api/schemas/preview.py:22:20: UP007 [*] Use `X | Y` for type annotations
+   |
+21 |     concept_code: str = Field(..., description="Código del concepto a calcular")
+22 |     location_code: Optional[str] = Field(
+   |                    ^^^^^^^^^^^^^ UP007
+23 |         "MX-CDMX", description="Código de ubicación para precios regionalizados"
+24 |     )
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/preview.py:25:23: UP007 [*] Use `X | Y` for type annotations
+   |
+23 |         "MX-CDMX", description="Código de ubicación para precios regionalizados"
+24 |     )
+25 |     calculation_date: Optional[date] = Field(None, description="Fecha de cálculo (default: hoy)")
+   |                       ^^^^^^^^^^^^^^ UP007
+26 | 
+27 |     @field_validator("concept_code")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/preview.py:58:16: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+56 |     location_code: str
+57 |     calculation_date: str
+58 |     breakdown: List[InsumoBreakdownItem]
+   |                ^^^^ UP006
+59 |     costo_directo: float = Field(..., description="Costo directo de insumos")
+60 |     indirectos: float = Field(..., description="Costos indirectos")
+   |
+   = help: Replace with `list`
+
+api/schemas/recalc.py:1:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+  |
+1 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+2 | 
+3 | from pydantic import BaseModel, Field, field_validator
+  |
+
+api/schemas/recalc.py:1:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+2 | 
+3 | from pydantic import BaseModel, Field, field_validator
+  |
+
+api/schemas/recalc.py:10:15: UP007 [*] Use `X | Y` for type annotations
+   |
+ 9 |     insumo_code: str = Field(..., description="Código del insumo a ajustar")
+10 |     quantity: Optional[float] = Field(None, gt=0, description="Nueva cantidad")
+   |               ^^^^^^^^^^^^^^^ UP007
+11 |     price: Optional[float] = Field(None, ge=0, description="Nuevo precio unitario")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:11:12: UP007 [*] Use `X | Y` for type annotations
+   |
+ 9 |     insumo_code: str = Field(..., description="Código del insumo a ajustar")
+10 |     quantity: Optional[float] = Field(None, gt=0, description="Nueva cantidad")
+11 |     price: Optional[float] = Field(None, ge=0, description="Nuevo precio unitario")
+   |            ^^^^^^^^^^^^^^^ UP007
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:17:19: UP006 [*] Use `dict` instead of `Dict` for type annotation
+   |
+15 |     """Request para recalcular precio con ajustes"""
+16 | 
+17 |     base_preview: Dict[str, Any] = Field(..., description="Preview base a modificar")
+   |                   ^^^^ UP006
+18 |     insumo_adjustments: Optional[List[InsumoAdjustment]] = Field(
+19 |         None, description="Ajustes a insumos"
+   |
+   = help: Replace with `dict`
+
+api/schemas/recalc.py:18:25: UP007 [*] Use `X | Y` for type annotations
+   |
+17 |     base_preview: Dict[str, Any] = Field(..., description="Preview base a modificar")
+18 |     insumo_adjustments: Optional[List[InsumoAdjustment]] = Field(
+   |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP007
+19 |         None, description="Ajustes a insumos"
+20 |     )
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:18:34: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+17 |     base_preview: Dict[str, Any] = Field(..., description="Preview base a modificar")
+18 |     insumo_adjustments: Optional[List[InsumoAdjustment]] = Field(
+   |                                  ^^^^ UP006
+19 |         None, description="Ajustes a insumos"
+20 |     )
+   |
+   = help: Replace with `list`
+
+api/schemas/recalc.py:21:26: UP007 [*] Use `X | Y` for type annotations
+   |
+19 |         None, description="Ajustes a insumos"
+20 |     )
+21 |     indirect_percentage: Optional[float] = Field(
+   |                          ^^^^^^^^^^^^^^^ UP007
+22 |         None, ge=0, le=1, description="Nuevo porcentaje de indirectos"
+23 |     )
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:24:25: UP007 [*] Use `X | Y` for type annotations
+   |
+22 |         None, ge=0, le=1, description="Nuevo porcentaje de indirectos"
+23 |     )
+24 |     utility_percentage: Optional[float] = Field(
+   |                         ^^^^^^^^^^^^^^^ UP007
+25 |         None, ge=0, le=1, description="Nuevo porcentaje de utilidad"
+26 |     )
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:30:37: UP007 [*] Use `X | Y` for type annotations
+   |
+28 |     @field_validator("indirect_percentage", "utility_percentage")
+29 |     @classmethod
+30 |     def validate_percentage(cls, v: Optional[float]) -> Optional[float]:
+   |                                     ^^^^^^^^^^^^^^^ UP007
+31 |         if v is not None and not (0 <= v <= 1):
+32 |             raise ValueError("Porcentaje debe estar entre 0 y 1")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:30:57: UP007 [*] Use `X | Y` for type annotations
+   |
+28 |     @field_validator("indirect_percentage", "utility_percentage")
+29 |     @classmethod
+30 |     def validate_percentage(cls, v: Optional[float]) -> Optional[float]:
+   |                                                         ^^^^^^^^^^^^^^^ UP007
+31 |         if v is not None and not (0 <= v <= 1):
+32 |             raise ValueError("Porcentaje debe estar entre 0 y 1")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/recalc.py:63:16: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+61 |     location_code: str
+62 |     calculation_date: str
+63 |     breakdown: List[Dict[str, Any]]
+   |                ^^^^ UP006
+64 |     costo_directo: float
+65 |     indirectos: float
+   |
+   = help: Replace with `list`
+
+api/schemas/recalc.py:63:21: UP006 [*] Use `dict` instead of `Dict` for type annotation
+   |
+61 |     location_code: str
+62 |     calculation_date: str
+63 |     breakdown: List[Dict[str, Any]]
+   |                     ^^^^ UP006
+64 |     costo_directo: float
+65 |     indirectos: float
+   |
+   = help: Replace with `dict`
+
+api/schemas/series.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import date
+2 | from typing import List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from pydantic import BaseModel, Field
+  |
+
+api/schemas/series.py:19:20: UP007 [*] Use `X | Y` for type annotations
+   |
+18 |     code: str = Field(..., description="Código del insumo o concepto")
+19 |     location_code: Optional[str] = Field("MX-CDMX", description="Código de ubicación")
+   |                    ^^^^^^^^^^^^^ UP007
+20 |     start_date: Optional[date] = Field(None, description="Fecha inicial")
+21 |     end_date: Optional[date] = Field(None, description="Fecha final")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/series.py:20:17: UP007 [*] Use `X | Y` for type annotations
+   |
+18 |     code: str = Field(..., description="Código del insumo o concepto")
+19 |     location_code: Optional[str] = Field("MX-CDMX", description="Código de ubicación")
+20 |     start_date: Optional[date] = Field(None, description="Fecha inicial")
+   |                 ^^^^^^^^^^^^^^ UP007
+21 |     end_date: Optional[date] = Field(None, description="Fecha final")
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/series.py:21:15: UP007 [*] Use `X | Y` for type annotations
+   |
+19 |     location_code: Optional[str] = Field("MX-CDMX", description="Código de ubicación")
+20 |     start_date: Optional[date] = Field(None, description="Fecha inicial")
+21 |     end_date: Optional[date] = Field(None, description="Fecha final")
+   |               ^^^^^^^^^^^^^^ UP007
+22 | 
+23 |     model_config = {
+   |
+   = help: Convert to `X | Y`
+
+api/schemas/series.py:44:18: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+42 |     unit: str
+43 |     location_code: str
+44 |     data_points: List[PricePoint]
+   |                  ^^^^ UP006
+45 |     count: int = Field(..., description="Número de puntos en la serie")
+   |
+   = help: Replace with `list`
+
+api/services/cache.py:9:15: UP007 [*] Use `X | Y` for type annotations
+  |
+7 | REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+8 | 
+9 | redis_client: Optional[aioredis.Redis] = None
+  |               ^^^^^^^^^^^^^^^^^^^^^^^^ UP007
+  |
+  = help: Convert to `X | Y`
+
+api/services/cache.py:28:35: UP007 [*] Use `X | Y` for type annotations
+   |
+28 | async def get_cached(key: str) -> Optional[Any]:
+   |                                   ^^^^^^^^^^^^^ UP007
+29 |     """
+30 |     Get cached value from Redis
+   |
+   = help: Convert to `X | Y`
+
+api/services/db.py:2:1: UP035 [*] Import from `collections.abc` instead: `AsyncGenerator`
+  |
+1 | import os
+2 | from typing import AsyncGenerator
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+  |
+  = help: Import from `collections.abc`
+
+api/services/nlu_matcher.py:1:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from typing import List, Optional, Tuple
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+2 | 
+3 | from sqlalchemy import select
+  |
+
+api/services/nlu_matcher.py:1:1: UP035 `typing.Tuple` is deprecated, use `tuple` instead
+  |
+1 | from typing import List, Optional, Tuple
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+2 | 
+3 | from sqlalchemy import select
+  |
+
+api/services/nlu_matcher.py:1:26: F401 [*] `typing.Optional` imported but unused
+  |
+1 | from typing import List, Optional, Tuple
+  |                          ^^^^^^^^ F401
+2 | 
+3 | from sqlalchemy import select
+  |
+  = help: Remove unused import: `typing.Optional`
+
+api/services/nlu_matcher.py:21:10: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+19 |     async def find_concept_by_description(
+20 |         self, description: str, limit: int = 5
+21 |     ) -> List[Tuple[Concept, float]]:
+   |          ^^^^ UP006
+22 |         """
+23 |         Busca conceptos por descripción usando coincidencia simple
+   |
+   = help: Replace with `list`
+
+api/services/nlu_matcher.py:21:15: UP006 [*] Use `tuple` instead of `Tuple` for type annotation
+   |
+19 |     async def find_concept_by_description(
+20 |         self, description: str, limit: int = 5
+21 |     ) -> List[Tuple[Concept, float]]:
+   |               ^^^^^ UP006
+22 |         """
+23 |         Busca conceptos por descripción usando coincidencia simple
+   |
+   = help: Replace with `tuple`
+
+api/services/nlu_matcher.py:38:80: UP006 [*] Use `list` instead of `List` for type annotation
+   |
+36 |         return results
+37 | 
+38 |     async def get_similar_concepts(self, concept_code: str, limit: int = 5) -> List[Concept]:
+   |                                                                                ^^^^ UP006
+39 |         """
+40 |         Obtiene conceptos similares al código dado
+   |
+   = help: Replace with `list`
+
+api/services/pricing_engine.py:2:28: F401 [*] `datetime.datetime` imported but unused
+  |
+1 | import os
+2 | from datetime import date, datetime
+  |                            ^^^^^^^^ F401
+3 | from decimal import Decimal
+4 | from typing import Any, Dict, List, Optional
+  |
+  = help: Remove unused import: `datetime.datetime`
+
+api/services/pricing_engine.py:4:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+  |
+2 | from datetime import date, datetime
+3 | from decimal import Decimal
+4 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+5 | 
+6 | from sqlalchemy import and_, select
+  |
+
+api/services/pricing_engine.py:4:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+2 | from datetime import date, datetime
+3 | from decimal import Decimal
+4 | from typing import Any, Dict, List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+5 | 
+6 | from sqlalchemy import and_, select
+  |
+
+api/services/pricing_engine.py:4:31: F401 [*] `typing.List` imported but unused
+  |
+2 | from datetime import date, datetime
+3 | from decimal import Decimal
+4 | from typing import Any, Dict, List, Optional
+  |                               ^^^^ F401
+5 | 
+6 | from sqlalchemy import and_, select
+  |
+  = help: Remove unused import: `typing.List`
+
+api/services/pricing_engine.py:25:10: UP007 [*] Use `X | Y` for type annotations
+   |
+23 |     async def get_latest_price(
+24 |         self, insumo_id: int, location_code: str, calculation_date: date
+25 |     ) -> Optional[Decimal]:
+   |          ^^^^^^^^^^^^^^^^^ UP007
+26 |         """
+27 |         Obtiene el precio más reciente de un insumo para una ubicación y fecha
+   |
+   = help: Convert to `X | Y`
+
+api/services/pricing_engine.py:59:27: UP007 [*] Use `X | Y` for type annotations
+   |
+57 |         concept_code: str,
+58 |         location_code: str = DEFAULT_LOCATION,
+59 |         calculation_date: Optional[date] = None,
+   |                           ^^^^^^^^^^^^^^ UP007
+60 |     ) -> Dict[str, Any]:
+61 |         """
+   |
+   = help: Convert to `X | Y`
+
+api/services/pricing_engine.py:60:10: UP006 [*] Use `dict` instead of `Dict` for type annotation
+   |
+58 |         location_code: str = DEFAULT_LOCATION,
+59 |         calculation_date: Optional[date] = None,
+60 |     ) -> Dict[str, Any]:
+   |          ^^^^ UP006
+61 |         """
+62 |         Genera la previsualización base de un concepto
+   |
+   = help: Replace with `dict`
+
+api/services/pricing_engine.py:145:23: UP006 [*] Use `dict` instead of `Dict` for type annotation
+    |
+143 |     async def recalculate_with_adjustments(
+144 |         self,
+145 |         base_preview: Dict[str, Any],
+    |                       ^^^^ UP006
+146 |         adjustments: Dict[str, Any],
+147 |     ) -> Dict[str, Any]:
+    |
+    = help: Replace with `dict`
+
+api/services/pricing_engine.py:146:22: UP006 [*] Use `dict` instead of `Dict` for type annotation
+    |
+144 |         self,
+145 |         base_preview: Dict[str, Any],
+146 |         adjustments: Dict[str, Any],
+    |                      ^^^^ UP006
+147 |     ) -> Dict[str, Any]:
+148 |         """
+    |
+    = help: Replace with `dict`
+
+api/services/pricing_engine.py:147:10: UP006 [*] Use `dict` instead of `Dict` for type annotation
+    |
+145 |         base_preview: Dict[str, Any],
+146 |         adjustments: Dict[str, Any],
+147 |     ) -> Dict[str, Any]:
+    |          ^^^^ UP006
+148 |         """
+149 |         Recalcula un precio con ajustes aplicados
+    |
+    = help: Replace with `dict`
+
+api/services/validation.py:2:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+  |
+1 | from datetime import date
+2 | from typing import Any, Dict, List
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from pydantic import ValidationError
+  |
+
+api/services/validation.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+  |
+1 | from datetime import date
+2 | from typing import Any, Dict, List
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ UP035
+3 | 
+4 | from pydantic import ValidationError
+  |
+
+api/services/validation.py:4:22: F401 [*] `pydantic.ValidationError` imported but unused
+  |
+2 | from typing import Any, Dict, List
+3 | 
+4 | from pydantic import ValidationError
+  |                      ^^^^^^^^^^^^^^^ F401
+  |
+  = help: Remove unused import: `pydantic.ValidationError`
+
+api/services/validation.py:7:35: UP006 [*] Use `list` instead of `List` for type annotation
+  |
+7 | def validate_breakdown(breakdown: List[Dict[str, Any]]) -> bool:
+  |                                   ^^^^ UP006
+8 |     """
+9 |     Valida que el desglose tenga estructura correcta
+  |
+  = help: Replace with `list`
+
+api/services/validation.py:7:40: UP006 [*] Use `dict` instead of `Dict` for type annotation
+  |
+7 | def validate_breakdown(breakdown: List[Dict[str, Any]]) -> bool:
+  |                                        ^^^^ UP006
+8 |     """
+9 |     Valida que el desglose tenga estructura correcta
+  |
+  = help: Replace with `dict`
+
+api/tests/conftest.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+  |
+1 | / import pytest
+2 | | from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+3 | | from sqlalchemy.ext.asyncio import async_sessionmaker
+4 | | 
+5 | | from api.models.base import Base
+6 | | 
+7 | | TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
+  | |_^ I001
+  |
+  = help: Organize imports
+
+api/tests/test_pricing_engine.py:5:24: F401 [*] `sqlalchemy.select` imported but unused
+  |
+4 | import pytest
+5 | from sqlalchemy import select
+  |                        ^^^^^^ F401
+6 | 
+7 | from api.models import Concept, ConceptRecipe, Insumo, InsumoPrice
+  |
+  = help: Remove unused import: `sqlalchemy.select`
+
+Found 98 errors.
+[*] 67 fixable with the `--fix` option.

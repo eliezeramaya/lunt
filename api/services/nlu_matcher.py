@@ -1,5 +1,3 @@
-from typing import List, Optional, Tuple
-
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,16 +16,16 @@ class NLUMatcher:
 
     async def find_concept_by_description(
         self, description: str, limit: int = 5
-    ) -> List[Tuple[Concept, float]]:
+    ) -> list[tuple[Concept, float]]:
         """
         Busca conceptos por descripción usando coincidencia simple
         TODO: Reemplazar con búsqueda vectorial en Qdrant
         """
         description_lower = description.lower()
 
-        query = select(Concept).where(
-            Concept.description.ilike(f"%{description_lower}%")
-        ).limit(limit)
+        query = (
+            select(Concept).where(Concept.description.ilike(f"%{description_lower}%")).limit(limit)
+        )
 
         result = await self.session.execute(query)
         concepts = result.scalars().all()
@@ -35,7 +33,7 @@ class NLUMatcher:
         results = [(concept, 1.0) for concept in concepts]
         return results
 
-    async def get_similar_concepts(self, concept_code: str, limit: int = 5) -> List[Concept]:
+    async def get_similar_concepts(self, concept_code: str, limit: int = 5) -> list[Concept]:
         """
         Obtiene conceptos similares al código dado
         TODO: Implementar con embeddings y Qdrant

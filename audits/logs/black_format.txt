@@ -1,0 +1,10 @@
+reformatted /home/eliezer/lunt/api/services/nlu_matcher.py
+reformatted /home/eliezer/lunt/api/models/users_locations.py
+reformatted /home/eliezer/lunt/api/models/concepts.py
+reformatted /home/eliezer/lunt/api/schemas/recalc.py
+reformatted /home/eliezer/lunt/api/routers/confirm.py
+reformatted /home/eliezer/lunt/api/routers/series.py
+reformatted /home/eliezer/lunt/api/models/drafts_quotes.py
+
+All done! ✨ 🍰 ✨
+7 files reformatted, 16 files left unchanged.

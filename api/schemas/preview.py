@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -19,10 +18,10 @@ class PreviewRequest(BaseModel):
     """Request para generar preview de precio unitario"""
 
     concept_code: str = Field(..., description="Código del concepto a calcular")
-    location_code: Optional[str] = Field(
+    location_code: str | None = Field(
         "MX-CDMX", description="Código de ubicación para precios regionalizados"
     )
-    calculation_date: Optional[date] = Field(None, description="Fecha de cálculo (default: hoy)")
+    calculation_date: date | None = Field(None, description="Fecha de cálculo (default: hoy)")
 
     @field_validator("concept_code")
     @classmethod
@@ -55,7 +54,7 @@ class PreviewResponse(BaseModel):
     concept_unit: str
     location_code: str
     calculation_date: str
-    breakdown: List[InsumoBreakdownItem]
+    breakdown: list[InsumoBreakdownItem]
     costo_directo: float = Field(..., description="Costo directo de insumos")
     indirectos: float = Field(..., description="Costos indirectos")
     utilidad: float = Field(..., description="Utilidad")

@@ -1,8 +1,8 @@
 from datetime import datetime
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from sqlalchemy import ForeignKey, Index, JSON, Numeric, String, Text
+from sqlalchemy import JSON, ForeignKey, Index, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base, TimestampMixin
@@ -24,13 +24,11 @@ class Draft(Base, TimestampMixin):
     calculation_date: Mapped[datetime] = mapped_column(nullable=False)
 
     # Resultados del cálculo
-    breakdown: Mapped[Dict[str, Any]] = mapped_column(JSON, nullable=False)
+    breakdown: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     costo_directo: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
     indirectos: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
     utilidad: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
-    precio_unitario: Mapped[Decimal] = mapped_column(
-        Numeric(precision=12, scale=4), nullable=False
-    )
+    precio_unitario: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
 
     # Parametros ajustables
     indirect_percentage: Mapped[Decimal] = mapped_column(
@@ -59,10 +57,8 @@ class Quote(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    draft_id: Mapped[Optional[int]] = mapped_column(ForeignKey("drafts.id"), nullable=True)
-    quote_number: Mapped[str] = mapped_column(
-        String(50), unique=True, index=True, nullable=False
-    )
+    draft_id: Mapped[int | None] = mapped_column(ForeignKey("drafts.id"), nullable=True)
+    quote_number: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
 
     concept_code: Mapped[str] = mapped_column(String(50), nullable=False)
     concept_description: Mapped[str] = mapped_column(Text, nullable=False)
@@ -70,13 +66,11 @@ class Quote(Base, TimestampMixin):
     calculation_date: Mapped[datetime] = mapped_column(nullable=False)
 
     # Snapshot inmutable del cálculo
-    breakdown: Mapped[Dict[str, Any]] = mapped_column(JSON, nullable=False)
+    breakdown: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     costo_directo: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
     indirectos: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
     utilidad: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
-    precio_unitario: Mapped[Decimal] = mapped_column(
-        Numeric(precision=12, scale=4), nullable=False
-    )
+    precio_unitario: Mapped[Decimal] = mapped_column(Numeric(precision=12, scale=4), nullable=False)
 
     indirect_percentage: Mapped[Decimal] = mapped_column(
         Numeric(precision=5, scale=4), nullable=False
@@ -86,7 +80,7 @@ class Quote(Base, TimestampMixin):
     )
 
     # Metadata
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="confirmed", nullable=False)
 
     # Relationships

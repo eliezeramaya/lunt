@@ -2,7 +2,6 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
-from sqlalchemy import select
 
 from api.models import Concept, ConceptRecipe, Insumo, InsumoPrice
 from api.services.pricing_engine import PricingEngine

@@ -1,0 +1,10 @@
+would reformat /home/eliezer/lunt/api/models/users_locations.py
+would reformat /home/eliezer/lunt/api/routers/confirm.py
+would reformat /home/eliezer/lunt/api/models/concepts.py
+would reformat /home/eliezer/lunt/api/schemas/recalc.py
+would reformat /home/eliezer/lunt/api/routers/series.py
+would reformat /home/eliezer/lunt/api/services/nlu_matcher.py
+would reformat /home/eliezer/lunt/api/models/drafts_quotes.py
+
+Oh no! 💥 💔 💥
+7 files would be reformatted, 16 files would be left unchanged.

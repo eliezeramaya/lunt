@@ -1,7 +1,8 @@
 # Auditoría de Ejecución - Proyecto Lunt
-**Fecha**: 28 de Octubre, 2025  
-**Auditor**: Sistema Automatizado  
-**Branch**: `dev/eliezer`  
+
+**Fecha**: 28 de Octubre, 2025
+**Auditor**: Sistema Automatizado
+**Branch**: `dev/eliezer`
 **Commit**: (último al momento de auditoría)
 
 ---
@@ -54,32 +55,33 @@ Repository: ~/lunt (https://github.com/eliezeramaya/lunt.git)
 
 ## Matriz de Verificación
 
-| # | Componente | Estado | Evidencia | Log |
-|---|------------|--------|-----------|-----|
-| 1 | Estructura de carpetas | ✅ PASS | 20/20 archivos esenciales presentes | `logs/structure_check.txt` |
-| 2 | Linter Python (Ruff) | ⚠️ N/A | Módulo no instalado | `logs/lint_python_ruff.txt` |
-| 3 | Linter Python (Black) | ⚠️ N/A | Módulo no instalado | - |
-| 4 | Linter Web (ESLint) | ⚠️ PEND | No ejecutado aún | `logs/lint_web.txt` |
-| 5 | Docker Compose UP | ❌ FAIL | Docker no instalado en sistema | - |
-| 6 | PostgreSQL | ❌ BLOCK | Depende de Docker | - |
-| 7 | Redis | ❌ BLOCK | Depende de Docker | - |
-| 8 | Alembic upgrade | ⚠️ N/A | Configurado, no ejecutado | - |
-| 9 | Seed load | ⚠️ N/A | Script presente, requiere DB | - |
-| 10 | API /health | ❌ BLOCK | Requiere Docker + Alembic | - |
-| 11 | API /v1/preview | ❌ BLOCK | Requiere API running | - |
-| 12 | API /v1/recalc | ❌ BLOCK | Requiere API running | - |
-| 13 | API /v1/series/* | ❌ BLOCK | Requiere API running | - |
-| 14 | Pytest | ⚠️ N/A | No instalado | `logs/pytest.txt` |
-| 15 | ETL Prefect | ⚠️ N/A | Código presente, no ejecutado | - |
-| 16 | Web build | ⚠️ PEND | Node.js disponible, pendiente npm install | `logs/web_build.txt` |
-| 17 | Web dev server | ⚠️ PEND | Pendiente instalación | - |
-| 18 | Tauri build | ❌ FAIL | Desktop app no implementada | - |
-| 19 | Metabase | ❌ BLOCK | Depende de Docker | - |
-| 20 | Qdrant | ❌ BLOCK | Depende de Docker | - |
-| 21 | MinIO | ❌ BLOCK | Depende de Docker | - |
-| 22 | README coherencia | ✅ PASS | Procedimientos documentados correctamente | - |
+| #   | Componente             | Estado   | Evidencia                                 | Log                         |
+| --- | ---------------------- | -------- | ----------------------------------------- | --------------------------- |
+| 1   | Estructura de carpetas | ✅ PASS  | 20/20 archivos esenciales presentes       | `logs/structure_check.txt`  |
+| 2   | Linter Python (Ruff)   | ⚠️ N/A   | Módulo no instalado                       | `logs/lint_python_ruff.txt` |
+| 3   | Linter Python (Black)  | ⚠️ N/A   | Módulo no instalado                       | -                           |
+| 4   | Linter Web (ESLint)    | ⚠️ PEND  | No ejecutado aún                          | `logs/lint_web.txt`         |
+| 5   | Docker Compose UP      | ❌ FAIL  | Docker no instalado en sistema            | -                           |
+| 6   | PostgreSQL             | ❌ BLOCK | Depende de Docker                         | -                           |
+| 7   | Redis                  | ❌ BLOCK | Depende de Docker                         | -                           |
+| 8   | Alembic upgrade        | ⚠️ N/A   | Configurado, no ejecutado                 | -                           |
+| 9   | Seed load              | ⚠️ N/A   | Script presente, requiere DB              | -                           |
+| 10  | API /health            | ❌ BLOCK | Requiere Docker + Alembic                 | -                           |
+| 11  | API /v1/preview        | ❌ BLOCK | Requiere API running                      | -                           |
+| 12  | API /v1/recalc         | ❌ BLOCK | Requiere API running                      | -                           |
+| 13  | API /v1/series/\*      | ❌ BLOCK | Requiere API running                      | -                           |
+| 14  | Pytest                 | ⚠️ N/A   | No instalado                              | `logs/pytest.txt`           |
+| 15  | ETL Prefect            | ⚠️ N/A   | Código presente, no ejecutado             | -                           |
+| 16  | Web build              | ⚠️ PEND  | Node.js disponible, pendiente npm install | `logs/web_build.txt`        |
+| 17  | Web dev server         | ⚠️ PEND  | Pendiente instalación                     | -                           |
+| 18  | Tauri build            | ❌ FAIL  | Desktop app no implementada               | -                           |
+| 19  | Metabase               | ❌ BLOCK | Depende de Docker                         | -                           |
+| 20  | Qdrant                 | ❌ BLOCK | Depende de Docker                         | -                           |
+| 21  | MinIO                  | ❌ BLOCK | Depende de Docker                         | -                           |
+| 22  | README coherencia      | ✅ PASS  | Procedimientos documentados correctamente | -                           |
 
 **Leyenda**:
+
 - ✅ PASS: Verificado y funcional
 - ⚠️ PEND: Pendiente de ejecutar (bloqueado por deps)
 - ⚠️ N/A: No aplicable en esta fase
@@ -141,7 +143,8 @@ $ pip3 --version
 
 **Causa raíz**: Instalación base de Python sin herramientas de desarrollo.
 
-**Impacto**: 
+**Impacto**:
+
 - No se puede crear entorno virtual
 - No se puede instalar dependencias desde `requirements.txt`
 - No se pueden ejecutar linters (Ruff, Black)
@@ -161,6 +164,7 @@ Command 'docker' not found
 **Causa raíz**: Entorno WSL sin Docker configurado.
 
 **Impacto**:
+
 - No se puede levantar infraestructura (PostgreSQL, Redis, API, Metabase, Qdrant, MinIO)
 - No se pueden ejecutar migraciones de Alembic
 - No se puede cargar seed data
@@ -172,6 +176,7 @@ Command 'docker' not found
 ### 4. Configuración de Archivos ✅
 
 **docker-compose.yml**: ✅ Validado
+
 - 6 servicios definidos: db, redis, api, metabase, qdrant, minio
 - Health checks configurados
 - Variables de entorno con defaults
@@ -179,11 +184,13 @@ Command 'docker' not found
 - Network isolation
 
 **alembic.ini**: ✅ Validado
+
 - Script location correcto
 - SQLAlchemy URL configurado
 - Versión inicial presente: `001_initial_schema.py`
 
 **package.json**: ✅ Validado
+
 - Scripts completos: dev, build, preview, lint, test
 - Dependencias principales: React 18, TypeScript 5, Vite 6, TailwindCSS
 
@@ -194,6 +201,7 @@ Command 'docker' not found
 ### 5. Arquitectura de Código ✅
 
 **Backend (FastAPI)**:
+
 ```
 api/
 ├── main.py                    ✅ Entry point
@@ -213,6 +221,7 @@ api/
 ```
 
 **Frontend (React + TypeScript)**:
+
 ```
 web/
 ├── src/
@@ -232,6 +241,7 @@ web/
 ```
 
 **Data Pipeline**:
+
 ```
 data/
 ├── seed/
@@ -253,6 +263,7 @@ data/
 **Impacto**: Feature documentado en README pero no implementado.
 
 **Estado en documentación**:
+
 - README.md menciona "Desktop App (Tauri)" como "Planned"
 - Roadmap v1.0 marca como `[ ]` (pendiente)
 - CONTRIBUTING.md menciona `desktop/src-tauri/`
@@ -268,6 +279,7 @@ data/
 **Problema**: Python 3.12.3 instalado sin herramientas de desarrollo.
 
 **Solución**:
+
 ```bash
 # Instalar dependencias del sistema
 sudo apt update
@@ -286,8 +298,8 @@ black --version
 pytest --version
 ```
 
-**Prioridad**: 🔴 CRÍTICA  
-**Tiempo estimado**: 5 minutos  
+**Prioridad**: 🔴 CRÍTICA
+**Tiempo estimado**: 5 minutos
 **Archivo de remediación**: `patches/001-setup-python-env.sh`
 
 ---
@@ -297,6 +309,7 @@ pytest --version
 **Problema**: Docker no disponible para levantar infraestructura.
 
 **Solución**:
+
 ```bash
 # Opción 1: Docker Desktop para WSL (recomendado)
 # Descargar e instalar Docker Desktop for Windows
@@ -313,8 +326,8 @@ docker --version
 docker compose version
 ```
 
-**Prioridad**: 🔴 CRÍTICA  
-**Tiempo estimado**: 10-15 minutos  
+**Prioridad**: 🔴 CRÍTICA
+**Tiempo estimado**: 10-15 minutos
 **Archivo de remediación**: `patches/002-setup-docker.sh`
 
 ---
@@ -325,8 +338,8 @@ docker compose version
 
 **Solución**: Crear estructura mínima de Tauri.
 
-**Prioridad**: 🟡 ALTA (feature commitment)  
-**Tiempo estimado**: 30 minutos  
+**Prioridad**: 🟡 ALTA (feature commitment)
+**Tiempo estimado**: 30 minutos
 **Archivo de remediación**: `patches/003-init-tauri-structure.diff`
 
 ---
@@ -345,7 +358,7 @@ script_location = %(here)s/alembic
 
 **Solución**: Ver `patches/004-fix-alembic-path.diff`
 
-**Prioridad**: 🟠 MEDIA  
+**Prioridad**: 🟠 MEDIA
 **Tiempo estimado**: 2 minutos
 
 ---
@@ -355,6 +368,7 @@ script_location = %(here)s/alembic
 **Problema**: Dependencias de desarrollo mezcladas con producción.
 
 **Solución**: Separar en `requirements-dev.txt`:
+
 ```
 pytest>=8.3.4
 pytest-asyncio>=0.24.0
@@ -363,7 +377,7 @@ ruff>=0.8.4
 black>=24.10.0
 ```
 
-**Prioridad**: 🟢 BAJA (best practice)  
+**Prioridad**: 🟢 BAJA (best practice)
 **Tiempo estimado**: 5 minutos
 
 ---
@@ -373,6 +387,7 @@ black>=24.10.0
 Una vez aplicadas las remediaciones críticas, ejecutar:
 
 ### Bloque 1: Python
+
 ```bash
 cd ~/lunt
 source venv/bin/activate
@@ -382,6 +397,7 @@ pytest api/tests/ -v > audits/logs/retest_pytest.txt
 ```
 
 ### Bloque 2: Docker + Database
+
 ```bash
 cd ~/lunt/infra
 docker compose up -d
@@ -391,6 +407,7 @@ docker compose exec api python scripts/load_seed.py > audits/logs/retest_seed.tx
 ```
 
 ### Bloque 3: API
+
 ```bash
 curl http://localhost:8000/health | jq > audits/logs/retest_api_health.txt
 curl -X POST http://localhost:8000/v1/preview \
@@ -400,6 +417,7 @@ curl -X POST http://localhost:8000/v1/preview \
 ```
 
 ### Bloque 4: Frontend
+
 ```bash
 cd ~/lunt/web
 npm install > audits/logs/retest_npm_install.txt 2>&1
@@ -412,28 +430,33 @@ npm run lint > audits/logs/retest_web_lint.txt 2>&1
 ## Riesgos Identificados
 
 ### 🔴 CRÍTICO: Entorno no reproducible
-**Descripción**: El README asume Docker y Python preconfigurados.  
-**Impacto**: Usuarios nuevos no pueden ejecutar el proyecto.  
+
+**Descripción**: El README asume Docker y Python preconfigurados.
+**Impacto**: Usuarios nuevos no pueden ejecutar el proyecto.
 **Mitigación**: Agregar sección "System Requirements" en README con instalación de prereqs.
 
 ### 🟡 ALTO: Desktop app no implementada pero documentada
-**Descripción**: Roadmap y arquitectura mencionan Tauri pero no existe código.  
-**Impacto**: Expectativas incorrectas para stakeholders.  
+
+**Descripción**: Roadmap y arquitectura mencionan Tauri pero no existe código.
+**Impacto**: Expectativas incorrectas para stakeholders.
 **Mitigación**: Marcar explícitamente como "Not Started" o implementar stub.
 
 ### 🟡 ALTO: Sin CI/CD configurado
-**Descripción**: No hay `.github/workflows` ni `.gitlab-ci.yml`.  
-**Impacto**: No hay validación automática de tests ni linters.  
+
+**Descripción**: No hay `.github/workflows` ni `.gitlab-ci.yml`.
+**Impacto**: No hay validación automática de tests ni linters.
 **Mitigación**: Agregar GitHub Actions para test + lint + build.
 
 ### 🟠 MEDIO: Sin autenticación en endpoints
-**Descripción**: Todos los endpoints son públicos.  
-**Impacto**: No apto para producción sin agregar JWT/OAuth.  
+
+**Descripción**: Todos los endpoints son públicos.
+**Impacto**: No apto para producción sin agregar JWT/OAuth.
 **Mitigación**: Documentar como pendiente para v1.1.
 
 ### 🟢 BAJO: Sin monitoring configurado
-**Descripción**: No hay Prometheus, Grafana o APM.  
-**Impacto**: Dificultad para diagnosticar issues en producción.  
+
+**Descripción**: No hay Prometheus, Grafana o APM.
+**Impacto**: Dificultad para diagnosticar issues en producción.
 **Mitigación**: Agregar en roadmap v1.1.
 
 ---
@@ -441,24 +464,28 @@ npm run lint > audits/logs/retest_web_lint.txt 2>&1
 ## Próximos Pasos
 
 ### Fase 1: Setup de Entorno (Inmediato)
+
 1. ✅ Aplicar `patches/001-setup-python-env.sh`
 2. ✅ Aplicar `patches/002-setup-docker.sh`
 3. ✅ Re-ejecutar suite de tests (Bloque 1-4)
 4. ✅ Validar matriz en verde
 
 ### Fase 2: Implementación Pendiente (1-2 días)
+
 1. 📝 Implementar estructura Tauri básica (`patches/003-init-tauri-structure.diff`)
 2. 📝 Crear `requirements-dev.txt`
 3. 📝 Agregar GitHub Actions CI
 4. 📝 Actualizar README con "System Requirements"
 
 ### Fase 3: Pre-Producción (1 semana)
+
 1. 🔐 Implementar autenticación JWT
 2. 📊 Agregar logging estructurado
 3. 🐛 Agregar Sentry o error tracking
 4. 🚀 Setup staging environment
 
 ### Fase 4: Producción (2-4 semanas)
+
 1. 🌐 Deploy a cloud provider (AWS/GCP/Azure)
 2. 📈 Configurar monitoring (Prometheus + Grafana)
 3. 🔄 CI/CD para deploy automático
@@ -469,6 +496,7 @@ npm run lint > audits/logs/retest_web_lint.txt 2>&1
 ## Comandos de Deployment Sugeridos
 
 ### Staging
+
 ```bash
 # Una vez matriz en verde
 git tag v0.1.0-staging
@@ -480,6 +508,7 @@ docker compose -f docker-compose.staging.yml up -d
 ```
 
 ### Producción
+
 ```bash
 # Crear release
 git checkout main
@@ -497,13 +526,15 @@ kubectl apply -f k8s/
 
 El proyecto Lunt presenta una **arquitectura sólida y código bien estructurado** que cumple con las especificaciones del prompt inicial. Los hallazgos críticos están relacionados con **el entorno de ejecución local**, no con el código en sí.
 
-**Recomendación final**: 
+**Recomendación final**:
+
 - ✅ **APROBAR** arquitectura y código fuente
 - ⚠️ **REQUIERE** setup de entorno antes de testing funcional
 - 📋 **PENDIENTE** implementación de Desktop/Tauri
 - 🚀 **LISTO** para continuar desarrollo una vez resueltas dependencias
 
 **Firma Digital**:
+
 ```
 Auditoría completada: 2025-10-28
 Auditor: Sistema Automatizado

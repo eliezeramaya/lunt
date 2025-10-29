@@ -1,5 +1,4 @@
 from datetime import date
-from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -16,9 +15,9 @@ class SeriesRequest(BaseModel):
     """Request para obtener serie temporal de precios"""
 
     code: str = Field(..., description="Código del insumo o concepto")
-    location_code: Optional[str] = Field("MX-CDMX", description="Código de ubicación")
-    start_date: Optional[date] = Field(None, description="Fecha inicial")
-    end_date: Optional[date] = Field(None, description="Fecha final")
+    location_code: str | None = Field("MX-CDMX", description="Código de ubicación")
+    start_date: date | None = Field(None, description="Fecha inicial")
+    end_date: date | None = Field(None, description="Fecha final")
 
     model_config = {
         "json_schema_extra": {
@@ -41,7 +40,7 @@ class SeriesResponse(BaseModel):
     description: str
     unit: str
     location_code: str
-    data_points: List[PricePoint]
+    data_points: list[PricePoint]
     count: int = Field(..., description="Número de puntos en la serie")
 
     model_config = {

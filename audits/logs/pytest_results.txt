@@ -1,0 +1,47 @@
+/home/eliezer/lunt/venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:208: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-8.3.4, pluggy-1.6.0 -- /home/eliezer/lunt/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/eliezer/lunt
+configfile: pyproject.toml
+plugins: asyncio-0.24.0, anyio-4.11.0
+asyncio: mode=Mode.STRICT, default_loop_scope=None
+collecting ... collected 5 items
+
+api/tests/test_preview.py::test_preview_endpoint_not_found FAILED        [ 20%]
+api/tests/test_preview.py::test_health_endpoint FAILED                   [ 40%]
+api/tests/test_pricing_engine.py::test_get_latest_price FAILED           [ 60%]
+api/tests/test_pricing_engine.py::test_pricing_engine_missing_price FAILED [ 80%]
+api/tests/test_pricing_engine.py::test_build_base_preview FAILED         [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_preview_endpoint_not_found ________________________
+api/tests/test_preview.py:10: in test_preview_endpoint_not_found
+    async with AsyncClient(app=app, base_url="http://test") as client:
+E   TypeError: AsyncClient.__init__() got an unexpected keyword argument 'app'
+_____________________________ test_health_endpoint _____________________________
+api/tests/test_preview.py:24: in test_health_endpoint
+    async with AsyncClient(app=app, base_url="http://test") as client:
+E   TypeError: AsyncClient.__init__() got an unexpected keyword argument 'app'
+____________________________ test_get_latest_price _____________________________
+api/tests/test_pricing_engine.py:19: in test_get_latest_price
+    db_session.add(insumo)
+E   AttributeError: 'async_generator' object has no attribute 'add'
+______________________ test_pricing_engine_missing_price _______________________
+api/tests/test_pricing_engine.py:49: in test_pricing_engine_missing_price
+    db_session.add(insumo)
+E   AttributeError: 'async_generator' object has no attribute 'add'
+___________________________ test_build_base_preview ____________________________
+api/tests/test_pricing_engine.py:69: in test_build_base_preview
+    db_session.add(concept)
+E   AttributeError: 'async_generator' object has no attribute 'add'
+=========================== short test summary info ============================
+FAILED api/tests/test_preview.py::test_preview_endpoint_not_found - TypeError: AsyncClient.__init__() got an unexpected keyword argument 'app'
+FAILED api/tests/test_preview.py::test_health_endpoint - TypeError: AsyncClient.__init__() got an unexpected keyword argument 'app'
+FAILED api/tests/test_pricing_engine.py::test_get_latest_price - AttributeError: 'async_generator' object has no attribute 'add'
+FAILED api/tests/test_pricing_engine.py::test_pricing_engine_missing_price - AttributeError: 'async_generator' object has no attribute 'add'
+FAILED api/tests/test_pricing_engine.py::test_build_base_preview - AttributeError: 'async_generator' object has no attribute 'add'
+============================== 5 failed in 0.68s ===============================

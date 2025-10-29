@@ -1,10 +1,8 @@
 from datetime import date
-from typing import Any, Dict, List
-
-from pydantic import ValidationError
+from typing import Any
 
 
-def validate_breakdown(breakdown: List[Dict[str, Any]]) -> bool:
+def validate_breakdown(breakdown: list[dict[str, Any]]) -> bool:
     """
     Valida que el desglose tenga estructura correcta
     """

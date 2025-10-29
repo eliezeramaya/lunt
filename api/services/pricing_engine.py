@@ -1,7 +1,7 @@
 import os
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,7 +22,7 @@ class PricingEngine:
 
     async def get_latest_price(
         self, insumo_id: int, location_code: str, calculation_date: date
-    ) -> Optional[Decimal]:
+    ) -> Decimal | None:
         """
         Obtiene el precio más reciente de un insumo para una ubicación y fecha
         """
@@ -56,8 +56,8 @@ class PricingEngine:
         self,
         concept_code: str,
         location_code: str = DEFAULT_LOCATION,
-        calculation_date: Optional[date] = None,
-    ) -> Dict[str, Any]:
+        calculation_date: date | None = None,
+    ) -> dict[str, Any]:
         """
         Genera la previsualización base de un concepto
         Calcula costo directo, indirectos y utilidad
@@ -142,9 +142,9 @@ class PricingEngine:
 
     async def recalculate_with_adjustments(
         self,
-        base_preview: Dict[str, Any],
-        adjustments: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        base_preview: dict[str, Any],
+        adjustments: dict[str, Any],
+    ) -> dict[str, Any]:
         """
         Recalcula un precio con ajustes aplicados
         Permite modificar cantidades, precios y porcentajes

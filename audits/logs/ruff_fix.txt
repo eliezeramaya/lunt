@@ -1,0 +1,122 @@
+api/models/concepts.py:57:21: F821 Undefined name `Insumo`
+   |
+55 |     # Relationships
+56 |     concept: Mapped["Concept"] = relationship("Concept", back_populates="recipes")
+57 |     insumo: Mapped["Insumo"] = relationship("Insumo", back_populates="recipes")
+   |                     ^^^^^^ F821
+58 | 
+59 |     __table_args__ = (
+   |
+
+api/models/drafts_quotes.py:44:19: F821 Undefined name `User`
+   |
+43 |     # Relationships
+44 |     user: Mapped["User"] = relationship("User", back_populates="drafts")
+   |                   ^^^^ F821
+45 | 
+46 |     __table_args__ = (Index("ix_drafts_user_date", "user_id", "calculation_date"),)
+   |
+
+api/models/drafts_quotes.py:93:19: F821 Undefined name `User`
+   |
+92 |     # Relationships
+93 |     user: Mapped["User"] = relationship("User", back_populates="quotes")
+   |                   ^^^^ F821
+94 | 
+95 |     __table_args__ = (
+   |
+
+api/models/insumos.py:28:27: F821 Undefined name `ConceptRecipe`
+   |
+26 |         "InsumoPrice", back_populates="insumo", cascade="all, delete-orphan"
+27 |     )
+28 |     recipes: Mapped[list["ConceptRecipe"]] = relationship("ConceptRecipe", back_populates="insumo")
+   |                           ^^^^^^^^^^^^^ F821
+29 | 
+30 |     __table_args__ = (Index("ix_insumos_category", "category"),)
+   |
+
+api/models/users_locations.py:39:26: F821 Undefined name `Draft`
+   |
+38 |     # Relationships
+39 |     drafts: Mapped[list["Draft"]] = relationship("Draft", back_populates="user")
+   |                          ^^^^^ F821
+40 |     quotes: Mapped[list["Quote"]] = relationship("Quote", back_populates="user")
+   |
+
+api/models/users_locations.py:40:26: F821 Undefined name `Quote`
+   |
+38 |     # Relationships
+39 |     drafts: Mapped[list["Draft"]] = relationship("Draft", back_populates="user")
+40 |     quotes: Mapped[list["Quote"]] = relationship("Quote", back_populates="user")
+   |                          ^^^^^ F821
+41 | 
+42 |     def __repr__(self) -> str:
+   |
+
+api/routers/confirm.py:72:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+71 |       except KeyError as e:
+72 |           raise HTTPException(
+   |  _________^
+73 | |             status_code=400, detail=f"Campo faltante en calculated_data: {str(e)}"
+74 | |         )
+   | |_________^ B904
+75 |       except Exception as e:
+76 |           raise HTTPException(status_code=500, detail=f"Error al confirmar cotizacion: {str(e)}")
+   |
+
+api/routers/confirm.py:76:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+74 |         )
+75 |     except Exception as e:
+76 |         raise HTTPException(status_code=500, detail=f"Error al confirmar cotizacion: {str(e)}")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+   |
+
+api/routers/preview.py:35:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+34 |     except ValueError as e:
+35 |         raise HTTPException(status_code=404, detail=str(e))
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+36 |     except Exception as e:
+37 |         raise HTTPException(status_code=500, detail=f"Error al calcular preview: {str(e)}")
+   |
+
+api/routers/preview.py:37:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+35 |         raise HTTPException(status_code=404, detail=str(e))
+36 |     except Exception as e:
+37 |         raise HTTPException(status_code=500, detail=f"Error al calcular preview: {str(e)}")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+   |
+
+api/routers/recalc.py:46:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+45 |     except ValueError as e:
+46 |         raise HTTPException(status_code=400, detail=str(e))
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+47 |     except Exception as e:
+48 |         raise HTTPException(status_code=500, detail=f"Error al recalcular: {str(e)}")
+   |
+
+api/routers/recalc.py:48:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+46 |         raise HTTPException(status_code=400, detail=str(e))
+47 |     except Exception as e:
+48 |         raise HTTPException(status_code=500, detail=f"Error al recalcular: {str(e)}")
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ B904
+   |
+
+api/routers/series.py:77:9: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+   |
+75 |           raise
+76 |       except Exception as e:
+77 |           raise HTTPException(
+   |  _________^
+78 | |             status_code=500, detail=f"Error al obtener serie temporal: {str(e)}"
+79 | |         )
+   | |_________^ B904
+   |
+
+Found 105 errors (92 fixed, 13 remaining).

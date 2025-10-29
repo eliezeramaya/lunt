@@ -1,12 +1,12 @@
 import json
 import os
-from typing import Any, Optional
+from typing import Any
 
 import redis.asyncio as aioredis
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
-redis_client: Optional[aioredis.Redis] = None
+redis_client: aioredis.Redis | None = None
 
 
 async def get_redis() -> aioredis.Redis:
@@ -25,7 +25,7 @@ async def close_redis() -> None:
         redis_client = None
 
 
-async def get_cached(key: str) -> Optional[Any]:
+async def get_cached(key: str) -> Any | None:
     """
     Get cached value from Redis
     Returns None if key doesn't exist

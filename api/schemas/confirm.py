@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 class ConfirmRequest(BaseModel):
     """Request para confirmar y guardar cotización"""
 
-    calculated_data: Dict[str, Any] = Field(..., description="Datos del cálculo a confirmar")
-    notes: Optional[str] = Field(None, description="Notas adicionales")
+    calculated_data: dict[str, Any] = Field(..., description="Datos del cálculo a confirmar")
+    notes: str | None = Field(None, description="Notas adicionales")
     user_id: int = Field(1, description="ID del usuario (placeholder)")
 
     model_config = {

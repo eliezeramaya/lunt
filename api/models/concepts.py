@@ -1,5 +1,4 @@
 from datetime import date
-from typing import List, Optional
 
 from sqlalchemy import ForeignKey, Index, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -19,19 +18,17 @@ class Concept(Base, TimestampMixin):
     code: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     unit: Mapped[str] = mapped_column(String(20), nullable=False)
-    category: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    category: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     # Embeddings para búsqueda semántica (placeholder)
-    embedding_vector: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    embedding_vector: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    recipes: Mapped[List["ConceptRecipe"]] = relationship(
+    recipes: Mapped[list["ConceptRecipe"]] = relationship(
         "ConceptRecipe", back_populates="concept", cascade="all, delete-orphan"
     )
 
-    __table_args__ = (
-        Index("ix_concepts_description_gin", "description", postgresql_using="gin"),
-    )
+    __table_args__ = (Index("ix_concepts_description_gin", "description", postgresql_using="gin"),)
 
     def __repr__(self) -> str:
         return f"<Concept(code={self.code}, description={self.description[:30]})>"
@@ -50,8 +47,8 @@ class ConceptRecipe(Base, TimestampMixin):
     insumo_id: Mapped[int] = mapped_column(ForeignKey("insumos.id"), nullable=False)
     quantity: Mapped[float] = mapped_column(nullable=False)
     valid_from: Mapped[date] = mapped_column(nullable=False)
-    valid_until: Mapped[Optional[date]] = mapped_column(nullable=True)
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    valid_until: Mapped[date | None] = mapped_column(nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
     concept: Mapped["Concept"] = relationship("Concept", back_populates="recipes")

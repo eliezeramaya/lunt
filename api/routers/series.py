@@ -74,9 +74,7 @@ async def get_insumo_price_series(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail=f"Error al obtener serie temporal: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Error al obtener serie temporal: {str(e)}")
 
 
 @router.get("/series/concepto/{concept_code}", response_model=SeriesResponse)

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -7,27 +7,25 @@ class InsumoAdjustment(BaseModel):
     """Ajuste a aplicar sobre un insumo específico"""
 
     insumo_code: str = Field(..., description="Código del insumo a ajustar")
-    quantity: Optional[float] = Field(None, gt=0, description="Nueva cantidad")
-    price: Optional[float] = Field(None, ge=0, description="Nuevo precio unitario")
+    quantity: float | None = Field(None, gt=0, description="Nueva cantidad")
+    price: float | None = Field(None, ge=0, description="Nuevo precio unitario")
 
 
 class RecalcRequest(BaseModel):
     """Request para recalcular precio con ajustes"""
 
-    base_preview: Dict[str, Any] = Field(..., description="Preview base a modificar")
-    insumo_adjustments: Optional[List[InsumoAdjustment]] = Field(
-        None, description="Ajustes a insumos"
-    )
-    indirect_percentage: Optional[float] = Field(
+    base_preview: dict[str, Any] = Field(..., description="Preview base a modificar")
+    insumo_adjustments: list[InsumoAdjustment] | None = Field(None, description="Ajustes a insumos")
+    indirect_percentage: float | None = Field(
         None, ge=0, le=1, description="Nuevo porcentaje de indirectos"
     )
-    utility_percentage: Optional[float] = Field(
+    utility_percentage: float | None = Field(
         None, ge=0, le=1, description="Nuevo porcentaje de utilidad"
     )
 
     @field_validator("indirect_percentage", "utility_percentage")
     @classmethod
-    def validate_percentage(cls, v: Optional[float]) -> Optional[float]:
+    def validate_percentage(cls, v: float | None) -> float | None:
         if v is not None and not (0 <= v <= 1):
             raise ValueError("Porcentaje debe estar entre 0 y 1")
         return v
@@ -60,7 +58,7 @@ class RecalcResponse(BaseModel):
     concept_unit: str
     location_code: str
     calculation_date: str
-    breakdown: List[Dict[str, Any]]
+    breakdown: list[dict[str, Any]]
     costo_directo: float
     indirectos: float
     utilidad: float
