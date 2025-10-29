@@ -1,43 +1,86 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Testing
-coverage/
-*.log
-
-# Production
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
 build/
+develop-eggs/
 dist/
-.dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Alembic
+alembic/versions/*.py
+!alembic/versions/.gitkeep
 
-# IDE
-# .vscode/ - Comentado para incluir configuración del workspace
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDEs
+.vscode/
 .idea/
 *.swp
 *.swo
 *~
 .DS_Store
 
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+.pnp
+.pnp.js
+
+# Frontend Build
+dist/
+build/
+.dist/
+
+# Testing
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+*.log
+
+# Docker
+.dockerignore
+
+# MinIO/S3
+.minio.sys/
+
 # Misc
 *.tgz
 .npm
 .eslintcache
 .cache
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+.ruff_cache/
+.mypy_cache/
 
 # OS
 Thumbs.db
+
+# Tauri
+desktop/src-tauri/target/
+desktop/src-tauri/Cargo.lock
+
