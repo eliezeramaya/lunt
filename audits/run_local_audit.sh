@@ -60,9 +60,9 @@ record_result() {
     local step="$1"
     local status="$2"
     local evidence="$3"
-    
+
     RESULTS+=("$step|$status|$evidence")
-    
+
     case "$status" in
         PASS) ((PASS_COUNT++)) ;;
         FAIL) ((FAIL_COUNT++)) ;;
@@ -78,7 +78,7 @@ setup_audit_dirs() {
     log_info "Creando estructura de directorios: $OUT"
     mkdir -p "$LOG_DIR"
     cd "$REPO_ROOT" || exit 1
-    
+
     # Crear archivo de metadata
     cat > "$OUT/metadata.txt" <<EOF
 Audit Timestamp: $STAMP
@@ -97,9 +97,9 @@ EOF
 
 check_01_structure() {
     log_info "===== 01: ESTRUCTURA DEL REPOSITORIO ====="
-    
+
     local log_file="$LOG_DIR/01-structure.log"
-    
+
     {
         echo "=== Estructura de directorios ==="
         if check_cmd tree; then
@@ -110,7 +110,7 @@ check_01_structure() {
                 -not -path '*/venv/*' -not -path '*/__pycache__/*' | sort > "$LOG_DIR/tree.txt"
             echo "Find listing generado en tree.txt"
         fi
-        
+
         echo ""
         echo "=== Archivos esenciales ==="
         local essential_files=(
@@ -121,7 +121,7 @@ check_01_structure() {
             "infra/docker-compose.yml"
             "web/package.json"
         )
-        
+
         local missing=0
         for file in "${essential_files[@]}"; do
             if [[ -f "$file" ]]; then
@@ -131,14 +131,14 @@ check_01_structure() {
                 ((missing++))
             fi
         done
-        
+
         if [[ $missing -eq 0 ]]; then
             echo "RESULT: PASS"
         else
             echo "RESULT: FAIL - $missing archivos esenciales faltantes"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Estructura del repositorio completa"
         record_result "01-STRUCTURE" "PASS" "logs/01-structure.log"
@@ -154,23 +154,23 @@ check_01_structure() {
 
 check_02_lint_python() {
     log_info "===== 02: LINTING PYTHON (ruff + black) ====="
-    
+
     local log_file="$LOG_DIR/02-lint-python.log"
-    
+
     # Verificar si existe venv
     if [[ ! -d "venv" ]]; then
         log_skip "venv no encontrado - saltando lint Python"
         record_result "02-LINT-PYTHON" "SKIP" "venv no disponible"
         return
     fi
-    
+
     # Activar venv
     source venv/bin/activate 2>/dev/null || {
         log_skip "No se pudo activar venv - saltando lint Python"
         record_result "02-LINT-PYTHON" "SKIP" "venv no activable"
         return
     }
-    
+
     {
         echo "=== Ruff Check ==="
         if check_cmd ruff; then
@@ -181,7 +181,7 @@ check_02_lint_python() {
             echo "Ruff no disponible"
             local ruff_exit=127
         fi
-        
+
         echo ""
         echo "=== Black Check ==="
         if check_cmd black; then
@@ -192,7 +192,7 @@ check_02_lint_python() {
             echo "Black no disponible"
             local black_exit=127
         fi
-        
+
         if [[ $ruff_exit -eq 0 && $black_exit -eq 0 ]]; then
             echo "RESULT: PASS"
         elif [[ $ruff_exit -eq 127 || $black_exit -eq 127 ]]; then
@@ -201,7 +201,7 @@ check_02_lint_python() {
             echo "RESULT: FAIL"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Linting Python OK"
         record_result "02-LINT-PYTHON" "PASS" "logs/02-lint-python.log"
@@ -220,25 +220,25 @@ check_02_lint_python() {
 
 check_03_lint_web() {
     log_info "===== 03: LINTING WEB (eslint + prettier) ====="
-    
+
     local log_file="$LOG_DIR/03-lint-web.log"
-    
+
     if [[ ! -f "web/package.json" ]]; then
         log_skip "web/package.json no encontrado - saltando lint Web"
         record_result "03-LINT-WEB" "SKIP" "proyecto web no existe"
         return
     fi
-    
+
     {
         cd web || exit 1
-        
+
         echo "=== ESLint Check ==="
         if [[ -f "package.json" ]] && grep -q "eslint" package.json; then
             npm run lint 2>&1 || echo "ESLint exit code: $?"
         else
             echo "ESLint no configurado en package.json"
         fi
-        
+
         echo ""
         echo "=== Prettier Check ==="
         if check_cmd prettier || [[ -f "node_modules/.bin/prettier" ]]; then
@@ -246,11 +246,11 @@ check_03_lint_web() {
         else
             echo "Prettier no disponible"
         fi
-        
+
         cd ..
         echo "RESULT: PASS"  # NOTE: Marcamos como PASS si se ejecutó aunque haya warnings
     } > "$log_file" 2>&1
-    
+
     # Si el directorio web existe y se ejecutó algo, marcamos PASS
     if [[ -f "web/package.json" ]]; then
         log_success "Linting Web ejecutado"
@@ -267,29 +267,29 @@ check_03_lint_web() {
 
 check_04_docker() {
     log_info "===== 04: DOCKER COMPOSE ====="
-    
+
     local log_file="$LOG_DIR/04-docker.log"
-    
+
     if ! check_cmd docker; then
         log_skip "Docker no instalado - saltando verificación Docker"
         record_result "04-DOCKER" "SKIP" "docker no disponible"
         return
     fi
-    
+
     if [[ ! -f "infra/docker-compose.yml" ]]; then
         log_skip "infra/docker-compose.yml no encontrado"
         record_result "04-DOCKER" "SKIP" "docker-compose.yml no existe"
         return
     fi
-    
+
     {
         echo "=== Docker Compose Validate ==="
         docker compose -f infra/docker-compose.yml config --quiet && echo "✓ Sintaxis válida"
-        
+
         echo ""
         echo "=== Docker Compose Status ==="
         docker compose -f infra/docker-compose.yml ps 2>&1 || true
-        
+
         # NOTE: No levantamos servicios automáticamente en auditoría
         # Solo verificamos si ya están corriendo
         echo ""
@@ -300,10 +300,10 @@ check_04_docker() {
         else
             echo "ℹ Servicios no están corriendo (OK para auditoría)"
         fi
-        
+
         echo "RESULT: PASS"
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Docker Compose válido"
         record_result "04-DOCKER" "PASS" "logs/04-docker.log"
@@ -319,51 +319,51 @@ check_04_docker() {
 
 check_05_alembic() {
     log_info "===== 05: ALEMBIC MIGRATIONS ====="
-    
+
     local log_file="$LOG_DIR/05-alembic.log"
-    
+
     if [[ ! -f "alembic.ini" ]]; then
         log_skip "alembic.ini no encontrado"
         record_result "05-ALEMBIC" "SKIP" "alembic no configurado"
         return
     fi
-    
+
     if [[ ! -d "venv" ]]; then
         log_skip "venv no disponible - saltando Alembic"
         record_result "05-ALEMBIC" "SKIP" "venv no disponible"
         return
     fi
-    
+
     source venv/bin/activate 2>/dev/null || {
         log_skip "No se pudo activar venv"
         record_result "05-ALEMBIC" "SKIP" "venv no activable"
         return
     }
-    
+
     {
         echo "=== Alembic Current ==="
         # NOTE: Solo verificamos estado, no ejecutamos migraciones en auditoría
         if check_cmd alembic; then
             alembic current 2>&1 || echo "No hay conexión DB (esperado en auditoría local)"
-            
+
             echo ""
             echo "=== Alembic History ==="
             alembic history 2>&1 | head -20
-            
+
             echo ""
             echo "=== Verificar Archivos de Migración ==="
             if [[ -d "migrations/versions" ]] || [[ -d "db/alembic/versions" ]]; then
                 echo "✓ Directorio de migraciones encontrado"
                 find . -path "*/versions/*.py" -type f 2>/dev/null | head -10
             fi
-            
+
             echo "RESULT: PASS"
         else
             echo "Alembic no disponible"
             echo "RESULT: SKIP"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Alembic configurado correctamente"
         record_result "05-ALEMBIC" "PASS" "logs/05-alembic.log"
@@ -382,21 +382,21 @@ check_05_alembic() {
 
 check_06_seed() {
     log_info "===== 06: SEED DATA ====="
-    
+
     local log_file="$LOG_DIR/06-seed.log"
-    
+
     if [[ ! -f "scripts/load_seed.py" ]]; then
         log_skip "scripts/load_seed.py no encontrado"
         record_result "06-SEED" "SKIP" "script de seed no existe"
         return
     fi
-    
+
     if [[ ! -d "venv" ]]; then
         log_skip "venv no disponible - saltando verificación seed"
         record_result "06-SEED" "SKIP" "venv no disponible"
         return
     fi
-    
+
     {
         echo "=== Verificar Script de Seed ==="
         if [[ -f "scripts/load_seed.py" ]]; then
@@ -404,7 +404,7 @@ check_06_seed() {
             echo ""
             echo "=== Verificar Archivos CSV ==="
             find data/ -name "*.csv" 2>/dev/null | head -10 || echo "No CSV files found"
-            
+
             # NOTE: No ejecutamos seed en auditoría, solo verificamos existencia
             echo ""
             echo "ℹ Script de seed disponible (no ejecutado en auditoría)"
@@ -413,7 +413,7 @@ check_06_seed() {
             echo "RESULT: SKIP"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Script de seed disponible"
         record_result "06-SEED" "PASS" "logs/06-seed.log"
@@ -429,19 +429,19 @@ check_06_seed() {
 
 check_07_api() {
     log_info "===== 07: API HEALTH CHECK ====="
-    
+
     local log_file="$LOG_DIR/07-api.log"
-    
+
     {
         echo "=== Verificar Puerto 8000 ==="
         if lsof -i :8000 &>/dev/null || netstat -tuln 2>/dev/null | grep -q ":8000 "; then
             echo "✓ Puerto 8000 ocupado - API probablemente corriendo"
-            
+
             echo ""
             echo "=== Health Check ==="
             if check_cmd curl; then
                 curl -s -f http://localhost:8000/health || echo "Health check falló"
-                
+
                 echo ""
                 echo "=== Test Preview Endpoint ==="
                 curl -s -X POST http://localhost:8000/v1/preview \
@@ -456,7 +456,7 @@ check_07_api() {
             echo "RESULT: SKIP"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "API funcionando correctamente"
         record_result "07-API" "PASS" "logs/07-api.log"
@@ -472,21 +472,21 @@ check_07_api() {
 
 check_08_pytest() {
     log_info "===== 08: PYTEST ====="
-    
+
     local log_file="$LOG_DIR/08-pytest.log"
-    
+
     if [[ ! -d "venv" ]]; then
         log_skip "venv no disponible - saltando tests"
         record_result "08-PYTEST" "SKIP" "venv no disponible"
         return
     fi
-    
+
     source venv/bin/activate 2>/dev/null || {
         log_skip "No se pudo activar venv"
         record_result "08-PYTEST" "SKIP" "venv no activable"
         return
     }
-    
+
     {
         echo "=== Pytest Execution ==="
         if check_cmd pytest; then
@@ -494,7 +494,7 @@ check_08_pytest() {
             local pytest_exit=$?
             echo ""
             echo "Pytest exit code: $pytest_exit"
-            
+
             if [[ $pytest_exit -eq 0 ]]; then
                 echo "RESULT: PASS"
             else
@@ -505,7 +505,7 @@ check_08_pytest() {
             echo "RESULT: SKIP"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Tests pasaron correctamente"
         record_result "08-PYTEST" "PASS" "logs/08-pytest.log"
@@ -524,9 +524,9 @@ check_08_pytest() {
 
 check_09_etl() {
     log_info "===== 09: ETL FLOWS ====="
-    
+
     local log_file="$LOG_DIR/09-etl.log"
-    
+
     {
         echo "=== Verificar Scripts ETL ==="
         if [[ -d "etl" ]]; then
@@ -542,7 +542,7 @@ check_09_etl() {
             echo "RESULT: SKIP"
         fi
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Scripts ETL encontrados"
         record_result "09-ETL" "PASS" "logs/09-etl.log"
@@ -558,18 +558,18 @@ check_09_etl() {
 
 check_10_web_build() {
     log_info "===== 10: WEB BUILD ====="
-    
+
     local log_file="$LOG_DIR/10-web-build.log"
-    
+
     if [[ ! -f "web/package.json" ]]; then
         log_skip "web/package.json no encontrado"
         record_result "10-WEB-BUILD" "SKIP" "proyecto web no existe"
         return
     fi
-    
+
     {
         cd web || exit 1
-        
+
         echo "=== Verificar Dependencias ==="
         if [[ -d "node_modules" ]]; then
             echo "✓ node_modules existe"
@@ -577,7 +577,7 @@ check_10_web_build() {
             echo "ℹ node_modules no existe - instalando..."
             npm ci 2>&1 | tail -20
         fi
-        
+
         echo ""
         echo "=== Build Producción ==="
         if npm run build 2>&1 | tee /dev/stderr | tail -30; then
@@ -595,10 +595,10 @@ check_10_web_build() {
         else
             echo "RESULT: FAIL"
         fi
-        
+
         cd ..
     } > "$log_file" 2>&1
-    
+
     if grep -q "RESULT: PASS" "$log_file"; then
         log_success "Build web exitoso"
         record_result "10-WEB-BUILD" "PASS" "logs/10-web-build.log"
@@ -617,16 +617,16 @@ check_10_web_build() {
 
 generate_summary() {
     log_info "===== GENERANDO SUMMARY ====="
-    
+
     local summary_file="$OUT/SUMMARY.md"
-    
+
     cat > "$summary_file" <<EOF
 # Auditoría Continua - Lunt
 
-**Timestamp**: $STAMP  
-**Branch**: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")  
-**Commit**: $(git rev-parse --short HEAD 2>/dev/null || echo "unknown")  
-**Host**: $(hostname)  
+**Timestamp**: $STAMP
+**Branch**: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+**Commit**: $(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+**Host**: $(hostname)
 **Date**: $(date)
 
 ---
@@ -636,20 +636,20 @@ generate_summary() {
 | Paso | Estado | Evidencia |
 |------|--------|-----------|
 EOF
-    
+
     for result in "${RESULTS[@]}"; do
         IFS='|' read -r step status evidence <<< "$result"
-        
+
         local status_badge
         case "$status" in
             PASS) status_badge="✅ PASS" ;;
             FAIL) status_badge="❌ FAIL" ;;
             SKIP) status_badge="⏭️ SKIP" ;;
         esac
-        
+
         echo "| $step | $status_badge | $evidence |" >> "$summary_file"
     done
-    
+
     cat >> "$summary_file" <<EOF
 
 ---
@@ -666,7 +666,7 @@ EOF
 ## Estado Final
 
 EOF
-    
+
     if [[ $FAIL_COUNT -gt 0 ]]; then
         echo "**❌ AUDIT FAILED** - $FAIL_COUNT checks fallaron" >> "$summary_file"
         echo ""  >> "$summary_file"
@@ -676,7 +676,7 @@ EOF
     else
         echo "**✅ AUDIT PASSED** - Todos los checks críticos pasaron" >> "$summary_file"
     fi
-    
+
     cat >> "$summary_file" <<EOF
 
 ---
@@ -699,7 +699,7 @@ $LOG_DIR/
 
 **Auditoría generada automáticamente** | Lunt Continuous Audit System v1.0
 EOF
-    
+
     log_info "Summary generado: $summary_file"
 }
 
@@ -713,9 +713,9 @@ main() {
     echo "║          LUNT - SISTEMA DE AUDITORÍA CONTINUA                 ║"
     echo "╚════════════════════════════════════════════════════════════════╝"
     echo ""
-    
+
     setup_audit_dirs
-    
+
     # Ejecutar todos los checks
     check_01_structure
     check_02_lint_python
@@ -727,10 +727,10 @@ main() {
     check_08_pytest
     check_09_etl
     check_10_web_build
-    
+
     # Generar summary
     generate_summary
-    
+
     # Mostrar resultados finales
     echo ""
     echo "╔════════════════════════════════════════════════════════════════╗"
@@ -745,7 +745,7 @@ main() {
     echo "Summary: $OUT/SUMMARY.md"
     echo "Logs:    $LOG_DIR/"
     echo ""
-    
+
     # Exit code
     if [[ $FAIL_COUNT -gt 0 ]]; then
         log_error "Auditoría FALLÓ - $FAIL_COUNT checks fallaron"
