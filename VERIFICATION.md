@@ -54,7 +54,8 @@ grep "X-Frame-Options" infra/nginx/default.conf
 grep "Content-Security-Policy" infra/nginx/default.conf
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - `X-Frame-Options: DENY`
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
@@ -113,7 +114,8 @@ grep python-json-logger requirements.txt
 # python-json-logger==3.2.1
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Archivo `api/services/logging_config.py` existe
 - Dependencia `python-json-logger==3.2.1` presente
 
@@ -143,7 +145,8 @@ curl -s http://localhost:8000/metrics | grep http_requests_total
 docker compose down
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Endpoint `/metrics` responde HTTP 200
 - Contiene métricas de Prometheus (http_requests_total, http_request_duration_seconds, etc.)
 - Métricas se incrementan después de requests
@@ -171,7 +174,8 @@ docker logs lunt-api 2>&1 | jq -r 'select(.http_path != null) | "\(.timestamp) \
 docker compose down
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Logs en formato JSON
 - Contienen campos: timestamp, level, http_method, http_path, status_code, latency_ms
 - Parseables con `jq`
@@ -188,7 +192,8 @@ grep -c "SELECT" audits/metabase/example_dashboard.sql.md
 # Salida esperada: > 10 (múltiples queries)
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Archivo `example_dashboard.sql.md` existe
 - Contiene múltiples queries SQL de ejemplo
 - Incluye instrucciones de setup
@@ -207,7 +212,8 @@ ls -la db/alembic/versions/002_perf_indexes.py
 grep -E "(ix_insumo_prices_lookup|ix_concept_recipes_lookup)" db/alembic/versions/002_perf_indexes.py
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Migration 002 existe
 - Crea índices: `ix_insumo_prices_lookup`, `ix_concept_recipes_lookup`, `ix_drafts_user_created`, `ix_quotes_user_status`
 
@@ -221,7 +227,8 @@ ls -la db/alembic/versions/003_materialized_views.py
 grep "CREATE MATERIALIZED VIEW" db/alembic/versions/003_materialized_views.py
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Migration 003 existe
 - Crea MV `concept_precios_mensuales`
 - Crea VIEW `concept_pu_mensual`
@@ -255,7 +262,8 @@ docker compose exec postgres psql -U lunt_user -d lunt_db -c "\dm concept_precio
 docker compose down -v
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Migraciones aplican sin error
 - Índices se crean correctamente
 - Vista materializada se crea correctamente
@@ -270,7 +278,8 @@ grep -A 10 "refresh_materialized_view" data/etl/flow_prices.py
 grep "refresh_materialized_view" data/etl/flow_prices.py
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Función `refresh_materialized_view()` existe en flow_prices.py
 - Se llama en el flujo principal después del load
 - Usa `REFRESH MATERIALIZED VIEW CONCURRENTLY`
@@ -292,7 +301,8 @@ grep -A 5 "on:" .github/workflows/continuous-audit.yml
 # schedule, workflow_dispatch, pull_request
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Workflow existe
 - Triggers: schedule (domingo 03:00), workflow_dispatch, pull_request
 
@@ -308,7 +318,8 @@ ls -l audits/run_local_audit.sh | grep -q "x" && echo "Executable" || echo "Not 
 # Salida esperada: Executable
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Script `run_local_audit.sh` existe
 - Tiene permisos de ejecución (+x)
 
@@ -338,7 +349,8 @@ ls -la audits/history/$(ls -t audits/history | head -1)/
 #   └── 10-web-build.log
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Auditoría ejecuta exitosamente
 - 9 o 10 checks pasan (1 puede ser SKIP si API no corre)
 - Genera SUMMARY.md y logs/
@@ -356,7 +368,8 @@ grep -E "^(audit|lint|test|dev|migrate):" Makefile
 make help
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Makefile existe
 - Contiene comandos: audit, lint, test, dev, migrate, setup, clean
 - `make help` muestra lista de comandos
@@ -379,7 +392,8 @@ ls -la desktop/src-tauri/
 # src/lib.rs
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Todos los archivos de configuración existen
 - `tauri.conf.json` apunta a `../web/dist`
 
@@ -399,7 +413,8 @@ grep "beforeBuildCommand" desktop/src-tauri/tauri.conf.json
 # "beforeBuildCommand": "cd ../web && npm run build"
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - `frontendDist` apunta a `../web/dist`
 - `beforeBuildCommand` ejecuta `npm run build` en web/
 
@@ -415,7 +430,8 @@ grep -A 5 "\[dependencies\]" desktop/src-tauri/Cargo.toml
 # serde_json
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Dependencias de Tauri 2 presentes
 - Features: devtools
 
@@ -435,7 +451,8 @@ grep -E "^#{1,2} " desktop/README.md
 # TODO: Offline Mode
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - README completo con instrucciones de build
 - Plan de modo offline documentado
 
@@ -445,14 +462,14 @@ grep -E "^#{1,2} " desktop/README.md
 # Solo si tienes Rust instalado
 if command -v cargo &> /dev/null; then
     echo "Rust encontrado. Probando build..."
-    
+
     # Build del frontend primero
     cd web && npm run build && cd ..
-    
+
     # Build de Tauri (toma varios minutos)
     cd desktop
     cargo tauri build
-    
+
     # Verificar output
     ls -la src-tauri/target/release/bundle/
 else
@@ -460,7 +477,8 @@ else
 fi
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Si Rust está instalado: Build completa sin errores
 - Si no: Skip (no es bloqueante)
 
@@ -482,7 +500,8 @@ grep -E "^#{1,2} .*(Seguridad|Observabilidad|Rendimiento|CI/CD|Desktop)" README.
 # Desktop App
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Todas las secciones nuevas presentes
 - Incluyen comandos de verificación
 - Ejemplos de output esperados
@@ -499,7 +518,8 @@ grep -E "(ALLOWED_ORIGINS|RATE_LIMIT|JWT_SECRET)" .env.example
 # JWT_SECRET_KEY=***CHANGE_ME_IN_PRODUCTION***
 ```
 
-**✅ Criterio de aceptación**: 
+**✅ Criterio de aceptación**:
+
 - Variables de seguridad presentes
 - Incluyen advertencias (WARNING, CHANGE_ME)
 - Valores sentinela documentados
@@ -509,6 +529,7 @@ grep -E "(ALLOWED_ORIGINS|RATE_LIMIT|JWT_SECRET)" .env.example
 ## 🎯 Resumen de Criterios de Aceptación
 
 ### ✅ Hardening de Producción
+
 - [x] CORS configurable por .env activo
 - [x] Rate limiting funcional y documentado
 - [x] Nginx devuelve headers seguros esperados
@@ -516,6 +537,7 @@ grep -E "(ALLOWED_ORIGINS|RATE_LIMIT|JWT_SECRET)" .env.example
 - [x] JWT con secret key configurable
 
 ### ✅ Observabilidad
+
 - [x] `/metrics` expone métricas Prometheus
 - [x] p50/p95/p99 por endpoint visibles
 - [x] Logs de la API en formato JSON
@@ -523,6 +545,7 @@ grep -E "(ALLOWED_ORIGINS|RATE_LIMIT|JWT_SECRET)" .env.example
 - [x] Ejemplos de dashboard Metabase creados
 
 ### ✅ Rendimiento
+
 - [x] Índices creados (migration 002)
 - [x] Migraciones aplican sin error
 - [x] Planes EXPLAIN mejoran coste en queries
@@ -530,18 +553,21 @@ grep -E "(ALLOWED_ORIGINS|RATE_LIMIT|JWT_SECRET)" .env.example
 - [x] ETL refresca la MV concurrentemente
 
 ### ✅ CI/CD
+
 - [x] Workflow de auditoría semanal configurado
 - [x] Workflow en PR publica artifacts y summary
 - [x] Marca SKIPPED si falta Docker
 - [x] Script run_local_audit.sh pasa
 
 ### ✅ Desktop
+
 - [x] tauri.conf.json apunta a ../web/dist
 - [x] desktop/README.md describe el build
 - [x] Plan de modo offline documentado
 - [x] Estructura completa de Tauri creada
 
 ### ✅ Documentación
+
 - [x] README.md actualizado con todas las nuevas secciones
 - [x] Incluye comandos de verificación
 - [x] .env.example con valores sentinela y advertencias
@@ -579,7 +605,7 @@ make audit
 
 ---
 
-**Fecha de verificación**: 2025-10-28  
-**Branch**: feat/hardening-observability-ci-tauri  
-**Commits**: 9 (atómicos por tema)  
+**Fecha de verificación**: 2025-10-28
+**Branch**: feat/hardening-observability-ci-tauri
+**Commits**: 9 (atómicos por tema)
 **Status**: ✅ READY TO MERGE

@@ -678,18 +678,18 @@ Migraciones aplicadas para optimizar queries frecuentes:
 **Migration 002: Performance Indexes**
 ```sql
 -- Lookup de precios más recientes (usado en preview/recalc)
-CREATE INDEX ix_insumo_prices_lookup 
+CREATE INDEX ix_insumo_prices_lookup
 ON insumo_prices (insumo_id, location_id, valid_from DESC);
 
 -- Lookup de recetas por concepto y localidad
-CREATE INDEX ix_concept_recipes_lookup 
+CREATE INDEX ix_concept_recipes_lookup
 ON concept_recipes (concept_id, location_id);
 
 -- Queries de usuario (dashboard, paginación)
-CREATE INDEX ix_drafts_user_created 
+CREATE INDEX ix_drafts_user_created
 ON drafts (user_id, created_at DESC);
 
-CREATE INDEX ix_quotes_user_status 
+CREATE INDEX ix_quotes_user_status
 ON quotes (user_id, status);
 ```
 

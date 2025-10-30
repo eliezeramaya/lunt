@@ -5,6 +5,7 @@ Este documento contiene queries SQL de ejemplo para crear dashboards de observab
 ## 📋 Setup Instructions
 
 1. **Conectar Metabase a PostgreSQL**:
+
    - Abrir Metabase en http://localhost:3001
    - Admin Settings → Databases → Add Database
    - Type: PostgreSQL
@@ -48,6 +49,7 @@ CREATE INDEX idx_api_logs_path ON api_logs(http_path);
 ```
 
 **Query**:
+
 ```sql
 SELECT
     http_path,
@@ -73,6 +75,7 @@ LIMIT 20;
 ### Requests por Hora (Últimos 7 días)
 
 **Query**:
+
 ```sql
 SELECT
     DATE_TRUNC('hour', timestamp) as hour,
@@ -101,6 +104,7 @@ ORDER BY hour DESC;
 **Descripción**: Monitorea incrementos anormales en tasas de error.
 
 **Query**:
+
 ```sql
 SELECT
     DATE_TRUNC('hour', timestamp) as hour,
@@ -125,6 +129,7 @@ ORDER BY hour DESC, error_count DESC;
 ### Top Errores 5xx con Detalles
 
 **Query**:
+
 ```sql
 SELECT
     http_path,
@@ -151,6 +156,7 @@ LIMIT 20;
 ### Actividad de Cotizaciones por Día
 
 **Query**:
+
 ```sql
 SELECT
     DATE(created_at) as date,
@@ -172,6 +178,7 @@ ORDER BY date DESC;
 ### Conceptos Más Cotizados (Top 20)
 
 **Query**:
+
 ```sql
 SELECT
     c.code,
@@ -198,6 +205,7 @@ LIMIT 20;
 **Descripción**: Detecta insumos con alta volatilidad de precios.
 
 **Query**:
+
 ```sql
 SELECT
     i.code,
@@ -230,6 +238,7 @@ LIMIT 30;
 **Descripción**: Usa la vista materializada `concept_pu_mensual` para gráficas rápidas.
 
 **Query**:
+
 ```sql
 SELECT
     month,
@@ -257,6 +266,7 @@ ORDER BY concept_code, month DESC;
 ### Comparación Regional de Precios
 
 **Query**:
+
 ```sql
 SELECT
     month,
@@ -281,11 +291,13 @@ ORDER BY month DESC, price_rank;
 ### Resumen Ejecutivo (Single Stat Cards)
 
 **Total Requests (24h)**:
+
 ```sql
 SELECT COUNT(*) FROM api_logs WHERE timestamp >= NOW() - INTERVAL '24 hours';
 ```
 
 **Success Rate (24h)**:
+
 ```sql
 SELECT
     ROUND(
@@ -298,6 +310,7 @@ WHERE timestamp >= NOW() - INTERVAL '24 hours';
 ```
 
 **Avg Response Time (24h)**:
+
 ```sql
 SELECT ROUND(AVG(latency_ms), 2) as avg_latency_ms
 FROM api_logs
@@ -305,6 +318,7 @@ WHERE timestamp >= NOW() - INTERVAL '24 hours';
 ```
 
 **Active Users (24h)**:
+
 ```sql
 SELECT COUNT(DISTINCT user_id) FROM quotes WHERE created_at >= NOW() - INTERVAL '24 hours';
 ```
@@ -318,6 +332,7 @@ SELECT COUNT(DISTINCT user_id) FROM quotes WHERE created_at >= NOW() - INTERVAL 
 
 2. **Refresh de MV**: El ETL refresca `concept_precios_mensuales` automáticamente.
    Para refresh manual:
+
    ```sql
    REFRESH MATERIALIZED VIEW CONCURRENTLY concept_precios_mensuales;
    ```
@@ -326,6 +341,7 @@ SELECT COUNT(DISTINCT user_id) FROM quotes WHERE created_at >= NOW() - INTERVAL 
    Verificar con `EXPLAIN ANALYZE` si son lentas.
 
 4. **Alertas**: Configurar notificaciones en Metabase:
+
    - Admin → Pulses → New Pulse
    - Condiciones: error_count > threshold
 
@@ -348,6 +364,7 @@ SELECT COUNT(DISTINCT user_id) FROM quotes WHERE created_at >= NOW() - INTERVAL 
 ## 🚀 Quick Start
 
 1. Ejecutar migración para crear MV:
+
    ```bash
    alembic upgrade head
    ```

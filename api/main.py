@@ -15,12 +15,12 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_fastapi_instrumentator import Instrumentator
+from api.services.metrics import instrument_app
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
-from api.routers import confirm, preview, recalc, series
+from api.routers import analytics, confirm, motor, preview, recalc, series
 from api.services.cache import close_redis, get_redis
 from api.services.db import close_db
 from api.services.logging_config import configure_logging, get_logger
@@ -151,19 +151,8 @@ async def log_requests(request: Request, call_next):
 
 # Prometheus metrics instrumentation
 # NOTE: Exposes /metrics endpoint with p50/p95/p99 latencies per endpoint
-instrumentator = Instrumentator(
-    should_group_status_codes=True,
-    should_ignore_untemplated=True,
-    should_respect_env_var=True,
-    should_instrument_requests_inprogress=True,
-    excluded_handlers=["/health", "/metrics"],
-    env_var_name="ENABLE_METRICS",
-    inprogress_name="http_requests_inprogress",
-    inprogress_labels=True,
-)
-
-instrumentator.instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
-logger.info("Prometheus metrics enabled at /metrics")
+instrument_app(app)
+logger.info("Prometheus metrics enabled", extra={"endpoint": "/metrics"})
 
 
 # Include routers
@@ -171,6 +160,8 @@ app.include_router(preview.router)
 app.include_router(recalc.router)
 app.include_router(confirm.router)
 app.include_router(series.router)
+app.include_router(motor.router)
+app.include_router(analytics.router)
 
 
 @app.get("/health")
@@ -212,3 +203,13 @@ if __name__ == "__main__":
         reload=DEBUG,
         log_config=None,  # Use our custom logging configuration
     )
+# Correlation ID middleware (adds/propagates X-Correlation-Id)
+@app.middleware("http")
+async def correlation_middleware(request: Request, call_next):
+    import uuid
+
+    corr = request.headers.get("X-Correlation-Id") or str(uuid.uuid4())
+    request.state.correlation_id = corr
+    response = await call_next(request)
+    response.headers["X-Correlation-Id"] = corr
+    return response

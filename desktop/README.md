@@ -23,7 +23,7 @@ Aplicación de escritorio para Lunt usando Tauri 2.0, que permite ejecutar la in
 - **Rust**: 1.70+
 - **Node.js**: 22+ (para compilar el frontend)
 - **System Dependencies**:
-  - **Linux**: 
+  - **Linux**:
     ```bash
     sudo apt-get update
     sudo apt-get install -y \
@@ -80,6 +80,7 @@ cargo tauri dev
 ```
 
 Esto:
+
 1. Compila el frontend en modo desarrollo (`npm run dev`)
 2. Inicia el servidor de desarrollo en `http://localhost:3000`
 3. Abre la aplicación Tauri apuntando al servidor
@@ -96,6 +97,7 @@ cargo tauri build
 ```
 
 Esto:
+
 1. Compila el frontend en modo producción (`npm run build` en `web/`)
 2. Empaqueta el resultado en `web/dist/`
 3. Compila el binario de Rust
@@ -105,7 +107,7 @@ Esto:
 
 Los binarios generados están en:
 
-- **Linux**: 
+- **Linux**:
   - `desktop/src-tauri/target/release/bundle/deb/lunt_0.1.0_amd64.deb`
   - `desktop/src-tauri/target/release/bundle/appimage/lunt_0.1.0_amd64.AppImage`
 - **macOS**:
@@ -200,9 +202,9 @@ fn main() {
 Llamar desde JavaScript:
 
 ```typescript
-import { invoke } from '@tauri-apps/api/core';
+import { invoke } from "@tauri-apps/api/core";
 
-const greeting = await invoke('greet', { name: 'World' });
+const greeting = await invoke("greet", { name: "World" });
 console.log(greeting); // "Hello, World!"
 ```
 
@@ -219,6 +221,7 @@ Para producción, puedes habilitar con `Ctrl+Shift+I` si compilas con feature `d
 ### Plan de Implementación
 
 1. **Agregar dependencias**:
+
    ```toml
    [dependencies]
    rusqlite = "0.30"
@@ -226,33 +229,38 @@ Para producción, puedes habilitar con `Ctrl+Shift+I` si compilas con feature `d
    ```
 
 2. **Crear esquema SQLite**:
+
    - Tablas para concepts, insumos, prices (espejo de PostgreSQL)
    - Metadata de sincronización (last_sync, dirty_records)
 
 3. **Implementar Commands**:
+
    ```rust
    #[tauri::command]
    async fn sync_data() -> Result<SyncStatus, String>
-   
+
    #[tauri::command]
    async fn get_concepts_offline() -> Result<Vec<Concept>, String>
    ```
 
 4. **Lógica de Sync**:
+
    - Al abrir app: verificar conectividad
    - Si online: sync desde API → SQLite
    - Si offline: usar datos de SQLite
    - Conflictos: timestamp wins o manual merge
 
 5. **UI Indicators**:
+
    - Badge "Offline Mode" en la app
    - Indicador de sincronización en progreso
    - Alertas de cambios pendientes
 
 6. **Ubicación del DB**:
+
    ```rust
    use tauri::api::path::app_data_dir;
-   
+
    let db_path = app_data_dir(&config)?.join("lunt.db");
    ```
 
@@ -314,6 +322,6 @@ opt-level = 0
 
 ---
 
-**Última actualización**: 2025-10-28  
-**Versión Tauri**: 2.0  
+**Última actualización**: 2025-10-28
+**Versión Tauri**: 2.0
 **Versión App**: 0.1.0

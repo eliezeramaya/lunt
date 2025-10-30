@@ -45,9 +45,16 @@ class ConceptRecipe(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     concept_id: Mapped[int] = mapped_column(ForeignKey("concepts.id"), nullable=False)
     insumo_id: Mapped[int] = mapped_column(ForeignKey("insumos.id"), nullable=False)
+    # Cantidad base del insumo en la receta
     quantity: Mapped[float] = mapped_column(nullable=False)
+    # Vigencia de la receta (si aplica)
     valid_from: Mapped[date] = mapped_column(nullable=False)
     valid_until: Mapped[date | None] = mapped_column(nullable=True)
+    # Variante de receta
+    variant_id: Mapped[str] = mapped_column(String(50), nullable=False, default="default")
+    variant_label: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    recipe_code: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    active: Mapped[bool] = mapped_column(default=True, nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
@@ -57,6 +64,8 @@ class ConceptRecipe(Base, TimestampMixin):
     __table_args__ = (
         Index("ix_concept_recipes_concept_valid", "concept_id", "valid_from", "valid_until"),
         Index("ix_concept_recipes_insumo", "insumo_id"),
+        Index("ix_concept_recipes_concept_variant", "concept_id", "variant_id"),
+        Index("ix_concept_recipes_active", "concept_id", "active"),
     )
 
     def __repr__(self) -> str:
